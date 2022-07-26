@@ -8,16 +8,6 @@ public class Teacher {
     private String academicDegree;
     private String employmentDate;
 
-    public Teacher(UUID id,
-                   PersonInfo personInfo,
-                   String academicDegree,
-                   String employmentDate) {
-        this.id = id;
-        this.personInfo = personInfo;
-        this.academicDegree = academicDegree;
-        this.employmentDate = employmentDate;
-    }
-
     public UUID getId() {
         return id;
     }

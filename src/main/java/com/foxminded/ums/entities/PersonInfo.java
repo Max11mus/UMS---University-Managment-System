@@ -15,26 +15,6 @@ public class PersonInfo {
     private String avatarPath;
     private String hashedPassword;
 
-    public PersonInfo(UUID id,
-                      String name,
-                      String surname,
-                      LocalDate birthDate,
-                      TimeZone timeZone,
-                      String login,
-                      String email,
-                      String avatarPath,
-                      String hashedPassword) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.birthDate = birthDate;
-        this.timeZone = timeZone;
-        this.login = login;
-        this.email = email;
-        this.avatarPath = avatarPath;
-        this.hashedPassword = hashedPassword;
-    }
-
     public UUID getId() {
         return id;
     }

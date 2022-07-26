@@ -8,12 +8,6 @@ public class Group {
     private String name;
     private Set<Student> students;
 
-    public Group(UUID id, String name, Set<Student> students) {
-        this.id = id;
-        this.name = name;
-        this.students = students;
-    }
-
     public UUID getId() {
         return id;
     }

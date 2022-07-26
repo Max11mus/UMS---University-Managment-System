@@ -9,20 +9,6 @@ public class Student {
     private LocalDate enrollDate;
     private LocalDate dropoutDate;
 
-    public Student(UUID id,
-                   PersonInfo personInfo,
-                   LocalDate enrollDate,
-                   LocalDate dropoutDate) {
-        this.id = id;
-        this.personInfo = personInfo;
-        this.enrollDate = enrollDate;
-        this.dropoutDate = dropoutDate;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
     public void setId(UUID id) {
         this.id = id;
     }

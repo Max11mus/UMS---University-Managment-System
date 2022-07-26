@@ -9,18 +9,6 @@ public class Lecture {
     private Teacher teacher;
     private Subject subject;
 
-    public Lecture(UUID id,
-                   String topic,
-                   String description,
-                   Teacher teacher,
-                   Subject subject) {
-        this.id = id;
-        this.topic = topic;
-        this.description = description;
-        this.teacher = teacher;
-        this.subject = subject;
-    }
-
     public UUID getId() {
         return id;
     }

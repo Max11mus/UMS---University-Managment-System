@@ -12,20 +12,6 @@ public class TimeTableUnit {
     private LocalDateTime begin;
     private LocalDateTime end;
 
-    public TimeTableUnit(UUID id,
-                         Location place,
-                         Lecture lecture,
-                         Set<Group> groups,
-                         LocalDateTime begin,
-                         LocalDateTime end) {
-        this.id = id;
-        this.place = place;
-        this.lecture = lecture;
-        this.groups = groups;
-        this.begin = begin;
-        this.end = end;
-    }
-
     public UUID getId() {
         return id;
     }

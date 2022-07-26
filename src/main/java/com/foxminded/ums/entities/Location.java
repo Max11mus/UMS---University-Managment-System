@@ -6,11 +6,6 @@ public class Location {
     private UUID id;
     private String address;
 
-    public Location(UUID id, String address) {
-        this.id = id;
-        this.address = address;
-    }
-
     public UUID getId() {
         return id;
     }
