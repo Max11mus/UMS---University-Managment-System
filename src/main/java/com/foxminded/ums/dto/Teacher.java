@@ -1,37 +1,12 @@
-package com.foxminded.ums.entities;
+package com.foxminded.ums.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import java.time.LocalDate;
 import java.util.UUID;
 
-
-@Entity
-@Table(name = "teacher", schema = "public")
 public class Teacher {
-    @Id
-    @GeneratedValue
-    @Column(name = "teacher_id", nullable = false)
     private UUID id;
-
-    @OneToOne
-    @JoinColumn(name = "person_id")
     private PersonInfo personInfo;
-
-    @Column(name = "academic_degree", nullable = false)
     private String academicDegree;
-
-    @Column(name = "employment_date", nullable = false)
-    private LocalDate employmentDate;
-
-    public void setPersonInfo(PersonInfo personInfo) {
-        this.personInfo = personInfo;
-    }
+    private String employmentDate;
 
     public UUID getId() {
         return id;
@@ -45,6 +20,10 @@ public class Teacher {
         return personInfo;
     }
 
+    public void setPersonInfo(PersonInfo personInfo) {
+        this.personInfo = personInfo;
+    }
+
     public String getAcademicDegree() {
         return academicDegree;
     }
@@ -53,11 +32,11 @@ public class Teacher {
         this.academicDegree = academicDegree;
     }
 
-    public LocalDate getEmploymentDate() {
+    public String getEmploymentDate() {
         return employmentDate;
     }
 
-    public void setEmploymentDate(LocalDate employmentDate) {
+    public void setEmploymentDate(String employmentDate) {
         this.employmentDate = employmentDate;
     }
 

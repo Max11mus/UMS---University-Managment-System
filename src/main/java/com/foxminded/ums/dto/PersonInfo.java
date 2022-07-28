@@ -1,44 +1,18 @@
-package com.foxminded.ums.entities;
+package com.foxminded.ums.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.TimeZone;
 import java.util.UUID;
 
-@Entity
-@Table(name = "person_info", schema = "public")
 public class PersonInfo {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "personinfo_id")
     private UUID id;
-
-    @Column(name = "name", nullable = false, length = 20)
     private String name;
-
-    @Column(name = "surname", nullable = false, length = 20)
     private String surname;
-    @Column(name = "birthDate", nullable = false)
     private LocalDate birthDate;
-
-    @Column(name = "timeZone", nullable = false, columnDefinition = "varchar(255)")
     private TimeZone timeZone;
-
-    @Column(name = "login", nullable = false, unique = true)
     private String login;
-
-    @Column(name = "email", nullable = false, unique = true)
     private String email;
-
-    @Column(name = "avatar_path", nullable = false, length = 1024)
     private String avatarPath;
-
-    @Column(name = "hashed_password", nullable = false)
     private String hashedPassword;
 
     public UUID getId() {

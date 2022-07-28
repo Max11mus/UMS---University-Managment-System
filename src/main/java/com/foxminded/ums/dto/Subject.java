@@ -1,24 +1,10 @@
-package com.foxminded.ums.entities;
+package com.foxminded.ums.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.UUID;
 
-@Entity
-@Table(name = "subject", schema = "public")
 public class Subject {
-    @Id
-    @GeneratedValue
-    @Column(name = "subject_id", nullable = false)
     UUID id;
-
-    @Column(name = "name", nullable = false)
     String name;
-
-    @Column(name = "description", nullable = false, length = 1024)
     String description;
 
     public UUID getId() {

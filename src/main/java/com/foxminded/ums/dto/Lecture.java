@@ -1,34 +1,12 @@
-package com.foxminded.ums.entities;
+package com.foxminded.ums.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import java.util.UUID;
 
-@Entity
-@Table(name = "lecture", schema = "public")
 public class Lecture {
-    @Id
-    @GeneratedValue
-    @Column(name = "lecture_id")
     private UUID id;
-
-    @Column(name = "topic", nullable = false)
     private String topic;
-
-    @Column(name = "description", nullable = false, length = 1024)
     private String description;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
     public UUID getId() {
