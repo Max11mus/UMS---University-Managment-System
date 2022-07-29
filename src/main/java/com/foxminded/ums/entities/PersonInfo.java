@@ -18,27 +18,27 @@ public class PersonInfo {
     @Column(name = "personinfo_id")
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 20)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "surname", nullable = false, length = 20)
+    @Column(name = "surname")
     private String surname;
-    @Column(name = "birthDate", nullable = false)
+    @Column(name = "birthDate")
     private LocalDate birthDate;
 
-    @Column(name = "timeZone", nullable = false, columnDefinition = "varchar(255)")
+    @Column(name = "timeZone")
     private TimeZone timeZone;
 
-    @Column(name = "login", nullable = false, unique = true)
+    @Column(name = "login")
     private String login;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "avatar_path", nullable = false, length = 1024)
+    @Column(name = "avatar_path")
     private String avatarPath;
 
-    @Column(name = "hashed_password", nullable = false)
+    @Column(name = "hashed_password")
     private String hashedPassword;
 
     public UUID getId() {

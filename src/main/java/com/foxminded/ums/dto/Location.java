@@ -1,9 +1,21 @@
 package com.foxminded.ums.dto;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
+//@Entity
+//@Table(name = "location", schema = "public")
 public class Location {
+    @Id
+    @GeneratedValue
+    @Column(name = "location_id")
     private UUID id;
+
+    @Column(name = "address")
     private String address;
 
     public UUID getId() {

@@ -12,10 +12,10 @@ import java.util.UUID;
 public class Location {
     @Id
     @GeneratedValue
-    @Column(name = "location_id", nullable = false)
+    @Column(name = "location_id")
     private UUID id;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     private String address;
 
     public UUID getId() {

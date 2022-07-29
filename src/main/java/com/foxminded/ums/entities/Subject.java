@@ -12,13 +12,13 @@ import java.util.UUID;
 public class Subject {
     @Id
     @GeneratedValue
-    @Column(name = "subject_id", nullable = false)
+    @Column(name = "subject_id")
     UUID id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
-    @Column(name = "description", nullable = false, length = 1024)
+    @Column(name = "description")
     String description;
 
     public UUID getId() {

@@ -16,17 +16,17 @@ import java.util.UUID;
 public class Teacher {
     @Id
     @GeneratedValue
-    @Column(name = "teacher_id", nullable = false)
+    @Column(name = "teacher_id")
     private UUID id;
 
     @OneToOne
     @JoinColumn(name = "person_id")
     private PersonInfo personInfo;
 
-    @Column(name = "academic_degree", nullable = false)
+    @Column(name = "academic_degree")
     private String academicDegree;
 
-    @Column(name = "employment_date", nullable = false)
+    @Column(name = "employment_date")
     private LocalDate employmentDate;
 
     public void setPersonInfo(PersonInfo personInfo) {

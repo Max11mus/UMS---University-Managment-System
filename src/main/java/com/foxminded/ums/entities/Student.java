@@ -22,10 +22,10 @@ public class Student {
     @JoinColumn(name = "person_id")
     private PersonInfo personInfo;
 
-    @Column(name = "enroll_date",nullable = true)
+    @Column(name = "enroll_date")
     private LocalDate enrollDate;
 
-    @Column(name = "dropout_date",nullable = true)
+    @Column(name = "dropout_date")
     private LocalDate dropoutDate;
 
     public void setId(UUID id) {

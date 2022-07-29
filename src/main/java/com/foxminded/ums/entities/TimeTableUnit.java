@@ -15,19 +15,19 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "time_table_unit", schema = "public")
+@Table(name = "time_table_unit")
 public class TimeTableUnit {
     @Id
     @GeneratedValue
-    @Column(name = "time_table_unit_id", nullable = false)
+    @Column(name = "time_table_unit_id")
     private UUID id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "location_id", nullable = false)
+    @JoinColumn(name = "location_id")
     private Location location;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "lecture_id", nullable = false)
+    @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 
     @ManyToMany

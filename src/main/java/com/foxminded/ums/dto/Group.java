@@ -1,11 +1,28 @@
 package com.foxminded.ums.dto;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 import java.util.UUID;
 
+//@Entity
+//@Table(name = "group", schema = "public")
 public class Group {
+    @Id
+    @GeneratedValue
+    @Column(name = "group_id")
     private UUID id;
+
+    @Column(name = "name")
     private String name;
+
+    @OneToMany
+    @JoinColumn(name = "group_id")
     private Set<Student> students;
 
     public UUID getId() {

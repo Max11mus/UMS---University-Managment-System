@@ -1,12 +1,37 @@
 package com.foxminded.ums.dto;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.UUID;
 
+
+//@Entity
+//@Table(name = "teacher", schema = "public")
 public class Teacher {
+    @Id
+    @GeneratedValue
+    @Column(name = "teacher_id")
     private UUID id;
+
+    @OneToOne
+    @JoinColumn(name = "person_id")
     private PersonInfo personInfo;
+
+    @Column(name = "academic_degree")
     private String academicDegree;
-    private String employmentDate;
+
+    @Column(name = "employment_date")
+    private LocalDate employmentDate;
+
+    public void setPersonInfo(PersonInfo personInfo) {
+        this.personInfo = personInfo;
+    }
 
     public UUID getId() {
         return id;
@@ -20,10 +45,6 @@ public class Teacher {
         return personInfo;
     }
 
-    public void setPersonInfo(PersonInfo personInfo) {
-        this.personInfo = personInfo;
-    }
-
     public String getAcademicDegree() {
         return academicDegree;
     }
@@ -32,11 +53,11 @@ public class Teacher {
         this.academicDegree = academicDegree;
     }
 
-    public String getEmploymentDate() {
+    public LocalDate getEmploymentDate() {
         return employmentDate;
     }
 
-    public void setEmploymentDate(String employmentDate) {
+    public void setEmploymentDate(LocalDate employmentDate) {
         this.employmentDate = employmentDate;
     }
 
