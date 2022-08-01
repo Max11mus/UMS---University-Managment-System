@@ -13,9 +13,9 @@ import java.util.UUID;
 @Repository
 public interface TimeTableUnitRepository extends JpaRepository<TimeTableUnit, UUID> {
     @Query(value = "SELECT tunit FROM TimeTableUnit tunit " +
-            " JOIN tunit.groups grp " +
-            " JOIN grp.students stdnt" +
-            " WHERE stdnt.id = :id AND DAY(t.begin) = DAY(:dateTime)")
+            " JOIN tunit.groups grp ON tunit.groups.id =" +
+            " JOIN grp.students stdnt"  +
+            " WHERE stdnt.id = :id AND  DAY(tunit.begin) = DAY(:dateTime)")
     List<TimeTableUnit> findByDayForStudent(@Param("id") UUID id, @Param("dateTime") LocalDateTime localDateTime);
 
 //    @Query(value = "SELECT t FROM TimeTableUnit t WHERE MONTH(t.begin) = MONTH(:dateTime)")
