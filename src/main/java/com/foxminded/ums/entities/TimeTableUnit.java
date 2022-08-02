@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "time_table_unit")
+@Table(name = "time_table_unit", schema = "ums")
 public class TimeTableUnit {
     @Id
     @GeneratedValue
@@ -31,15 +31,15 @@ public class TimeTableUnit {
     private Lecture lecture;
 
     @ManyToMany
-    @JoinTable(name = "time_table_unit_groups",
+    @JoinTable(name = "timetableunit_groups", schema = "ums",
             joinColumns = @JoinColumn(name = "time_table_unit_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<Group> groups = new HashSet<>();
 
-    @Column(name = "begin", nullable = false)
+    @Column(name = "begin_", nullable = false)
     private LocalDateTime begin;
 
-    @Column(name = "end", nullable = false)
+    @Column(name = "end_", nullable = false)
     private LocalDateTime end;
 
     public Location getLocation() {

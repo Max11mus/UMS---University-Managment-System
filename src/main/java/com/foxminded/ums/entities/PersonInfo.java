@@ -10,7 +10,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 @Entity
-@Table(name = "person_info", schema = "public")
+@Table(name = "person_info", schema = "ums")
 public class PersonInfo {
 
     @Id
@@ -18,7 +18,7 @@ public class PersonInfo {
     @Column(name = "personinfo_id")
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name_")
     private String name;
 
     @Column(name = "surname")

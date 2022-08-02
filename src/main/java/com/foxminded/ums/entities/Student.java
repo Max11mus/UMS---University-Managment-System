@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "student", schema = "public")
+@Table(name = "student", schema = "ums")
 public class Student {
     @Id
     @GeneratedValue
@@ -27,6 +27,10 @@ public class Student {
 
     @Column(name = "dropout_date")
     private LocalDate dropoutDate;
+
+    public UUID getId() {
+        return id;
+    }
 
     public void setId(UUID id) {
         this.id = id;

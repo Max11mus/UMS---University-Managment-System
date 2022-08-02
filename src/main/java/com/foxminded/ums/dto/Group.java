@@ -18,7 +18,7 @@ public class Group {
     @Column(name = "group_id")
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name_")
     private String name;
 
     @OneToMany

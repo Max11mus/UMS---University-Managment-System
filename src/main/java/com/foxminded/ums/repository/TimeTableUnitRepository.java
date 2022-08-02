@@ -6,21 +6,52 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface TimeTableUnitRepository extends JpaRepository<TimeTableUnit, UUID> {
     @Query(value = "SELECT tunit FROM TimeTableUnit tunit " +
-            " JOIN tunit.groups grp ON tunit.groups.id =" +
-            " JOIN grp.students stdnt"  +
-            " WHERE stdnt.id = :id AND  DAY(tunit.begin) = DAY(:dateTime)")
-    List<TimeTableUnit> findByDayForStudent(@Param("id") UUID id, @Param("dateTime") LocalDateTime localDateTime);
+            " JOIN tunit.groups grp " +
+            " JOIN grp.students stdnt" +
+            " WHERE stdnt.id = :id " +
+            " AND DAY(tunit.begin) = :pday " +
+            " AND YEAR(tunit.begin) = :pyear " +
+            " AND MONTH(tunit.begin) = :pmonth")
+    List<TimeTableUnit> findByDayForStudent(@Param("id") UUID id,
+                                            @Param("pday") Integer pday,
+                                            @Param("pmonth") Integer month,
+                                            @Param("pyear") Integer year);
 
-//    @Query(value = "SELECT t FROM TimeTableUnit t WHERE MONTH(t.begin) = MONTH(:dateTime)")
-//    List<TimeTableUnit> findByMonth(@Param("dateTime") LocalDateTime creationDateTime);
+    @Query(value = "SELECT tunit FROM TimeTableUnit tunit " +
+            " JOIN tunit.groups grp " +
+            " JOIN grp.students stdnt" +
+            " WHERE stdnt.id = :id " +
+            " AND YEAR(tunit.begin) = :pyear " +
+            " AND MONTH(tunit.begin) = :pmonth")
+    List<TimeTableUnit> findByMonthForStudent(@Param("id") UUID id,
+                                              @Param("pyear") Integer year,
+                                              @Param("pmonth") Integer month);
+
+    @Query(value = "SELECT tunit FROM TimeTableUnit tunit " +
+            " JOIN tunit.lecture lct " +
+            " JOIN lct.teacher tchr" +
+            " WHERE tchr.id = :id " +
+            " AND DAY(tunit.begin) = :pday " +
+            " AND YEAR(tunit.begin) = :pyear " +
+            " AND MONTH(tunit.begin) = :pmonth")
+    List<TimeTableUnit> findByDayForTeacher(@Param("id") UUID id,
+                                            @Param("pday") Integer pday,
+                                            @Param("pmonth") Integer month,
+                                            @Param("pyear") Integer year);
+
+    @Query(value = "SELECT tunit FROM TimeTableUnit tunit " +
+            " JOIN tunit.lecture lct " +
+            " JOIN lct.teacher tchr" +
+            " WHERE tchr.id = :id " +
+            " AND YEAR(tunit.begin) = :pyear " +
+            " AND MONTH(tunit.begin) = :pmonth")
+    List<TimeTableUnit> findByMonthForTeacher(@Param("id") UUID id,
+                                              @Param("pyear") Integer year,
+                                              @Param("pmonth") Integer month);
 }
-//    SELECT x "
-//        + "FROM MyInfo x JOIN x.myInfoRequests b "
-//        + "WHERE x.status = :status AND b.dataA = :dataA";

@@ -12,7 +12,7 @@ import java.util.UUID;
 
 
 @Entity
-@Table(name = "teacher", schema = "public")
+@Table(name = "teacher", schema = "ums")
 public class Teacher {
     @Id
     @GeneratedValue

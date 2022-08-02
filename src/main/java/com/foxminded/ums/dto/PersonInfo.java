@@ -18,7 +18,7 @@ public class PersonInfo {
     @Column(name = "personinfo_id")
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name_")
     private String name;
 
     @Column(name = "surname")
