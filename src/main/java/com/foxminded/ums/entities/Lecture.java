@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "lecture", schema = "public")
+@Table(name = "lecture", schema = "ums")
 public class Lecture {
     @Id
     @GeneratedValue

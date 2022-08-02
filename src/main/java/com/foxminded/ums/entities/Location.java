@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "location", schema = "public")
+@Table(name = "location_", schema = "ums")
 public class Location {
     @Id
     @GeneratedValue
