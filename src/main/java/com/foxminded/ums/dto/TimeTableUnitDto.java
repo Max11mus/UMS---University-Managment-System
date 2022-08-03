@@ -1,20 +1,16 @@
 package com.foxminded.ums.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import com.foxminded.ums.entities.Group;
+import com.foxminded.ums.entities.Lecture;
+import com.foxminded.ums.entities.Location;
+import com.foxminded.ums.entities.TimeTableUnit;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class TimeTableUnit {
+public class TimeTableUnitDto {
     private UUID id;
     private Location location;
     private Lecture lecture;
@@ -75,7 +71,7 @@ public class TimeTableUnit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TimeTableUnit that = (TimeTableUnit) o;
+        TimeTableUnitDto that = (TimeTableUnitDto) o;
 
         if (!id.equals(that.id)) return false;
         if (!location.equals(that.location)) return false;
@@ -88,5 +84,18 @@ public class TimeTableUnit {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public TimeTableUnit convertToEntity(){
+        TimeTableUnit entity = new TimeTableUnit();
+
+        entity.setId(this.getId());
+        entity.setBegin(this.getBegin());
+        entity.setEnd(this.getEnd());
+        entity.setGroups(this.getGroups());
+        entity.setLecture(this.getLecture());
+        entity.setLocation(this.getLocation());
+
+        return  entity;
     }
 }

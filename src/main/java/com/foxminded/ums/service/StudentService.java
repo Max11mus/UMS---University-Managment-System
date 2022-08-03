@@ -1,5 +1,7 @@
 package com.foxminded.ums.service;
 
+
+import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.entities.Student;
 import com.foxminded.ums.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,24 +16,24 @@ public class StudentService {
     @Autowired
     StudentRepository studentRepository;
 
-    public Student findStudent(Student student) {
-        return studentRepository.findById(student.getId()).get();
+    public Student findStudent(StudentDto studentDto) {
+        return studentRepository.findById(studentDto.getId()).get();
     }
 
     public List<Student> findStudents() {
         return studentRepository.findAll();
     }
 
-    public Student addStudent(Student student) {
-        return studentRepository.save(student);
+    public Student addStudent(StudentDto studentDto) {
+        return studentRepository.save(studentDto.convertToEntity());
     }
 
-    public Student updateStudent(Student student) {
-        return studentRepository.save(student);
+    public Student updateStudent(StudentDto studentDto) {
+        return studentRepository.save(studentDto.convertToEntity());
     }
 
-    public void deleteStudent(Student student) {
-        studentRepository.deleteById(student.getId());
+    public void deleteStudent(StudentDto studentDto) {
+        studentRepository.deleteById(studentDto.getId());
     }
 
 }

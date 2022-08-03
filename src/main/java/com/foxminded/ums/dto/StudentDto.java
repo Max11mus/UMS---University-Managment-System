@@ -1,16 +1,12 @@
 package com.foxminded.ums.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import com.foxminded.ums.entities.PersonInfo;
+import com.foxminded.ums.entities.Student;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class Student {
+public class StudentDto {
     private UUID id;
     private PersonInfo personInfo;
     private LocalDate enrollDate;
@@ -18,6 +14,10 @@ public class Student {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public PersonInfo getPersonInfo() {
@@ -49,7 +49,7 @@ public class Student {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Student student = (Student) o;
+        StudentDto student = (StudentDto) o;
 
         if (!id.equals(student.id)) return false;
         if (!personInfo.equals(student.personInfo)) return false;
@@ -60,5 +60,16 @@ public class Student {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public Student convertToEntity(){
+        Student entity = new Student();
+
+        entity.setId(this.getId());
+        entity.setPersonInfo(this.getPersonInfo());
+        entity.setDropoutDate(this.getDropoutDate());
+        entity.setEnrollDate(this.getEnrollDate());
+
+        return  entity;
     }
 }
