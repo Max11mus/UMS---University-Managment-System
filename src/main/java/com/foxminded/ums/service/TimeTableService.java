@@ -1,5 +1,7 @@
 package com.foxminded.ums.service;
 
+import com.foxminded.ums.dto.StudentDto;
+import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.entities.Student;
 import com.foxminded.ums.entities.Teacher;
 import com.foxminded.ums.entities.TimeTableUnit;
@@ -18,23 +20,23 @@ public class TimeTableService {
     @Autowired
     TimeTableUnitRepository timeTableUnitRepository;
 
-    public List<TimeTableUnit> findByDayForStudent(Student student, LocalDate day) {
-        return timeTableUnitRepository.findByDayForStudent(student.getId(),
+    public List<TimeTableUnit> findByDayForStudent(StudentDto studentDto, LocalDate day) {
+        return timeTableUnitRepository.findByDayForStudent(studentDto.convertToEntity().getId(),
                         day.getDayOfMonth(), day.getMonthValue(), day.getYear());
     }
 
-    public List<TimeTableUnit> findByMonthForStudent(Student student, LocalDate month) {
-        return timeTableUnitRepository.findByMonthForStudent(student.getId(),
+    public List<TimeTableUnit> findByMonthForStudent(StudentDto studentDto, LocalDate month) {
+        return timeTableUnitRepository.findByMonthForStudent(studentDto.convertToEntity().getId(),
                 month.getYear(), month.getMonthValue());
     }
 
-    public List<TimeTableUnit> findByDayForTeacher(Teacher teacher, LocalDate day) {
-        return timeTableUnitRepository.findByDayForStudent(teacher.getId(),
+    public List<TimeTableUnit> findByDayForTeacher(TeacherDto teacherDto, LocalDate day) {
+        return timeTableUnitRepository.findByDayForStudent(teacherDto.convertToEntity().getId(),
                 day.getDayOfMonth(), day.getMonthValue(), day.getYear());
     }
 
-    public List<TimeTableUnit> findByMonthForTeacher(Teacher teacher, LocalDate month) {
-        return timeTableUnitRepository.findByMonthForStudent(teacher.getId(),
+    public List<TimeTableUnit> findByMonthForTeacher(TeacherDto teacherDto, LocalDate month) {
+        return timeTableUnitRepository.findByMonthForStudent(teacherDto.convertToEntity().getId(),
                 month.getYear(), month.getMonthValue());
     }
 

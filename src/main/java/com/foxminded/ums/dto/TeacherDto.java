@@ -1,16 +1,12 @@
 package com.foxminded.ums.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import com.foxminded.ums.entities.PersonInfo;
+import com.foxminded.ums.entities.Teacher;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class Teacher {
+public class TeacherDto {
     private UUID id;
     private PersonInfo personInfo;
     private String academicDegree;
@@ -53,7 +49,7 @@ public class Teacher {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Teacher teacher = (Teacher) o;
+        TeacherDto teacher = (TeacherDto) o;
 
         if (!id.equals(teacher.id)) return false;
         if (!personInfo.equals(teacher.personInfo)) return false;
@@ -64,5 +60,16 @@ public class Teacher {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public Teacher convertToEntity(){
+        Teacher entity = new Teacher();
+
+        entity.setId(this.getId());
+        entity.setPersonInfo(this.getPersonInfo());
+        entity.setAcademicDegree(this.getAcademicDegree());
+        entity.setEmploymentDate(this.getEmploymentDate());
+
+        return  entity;
     }
 }

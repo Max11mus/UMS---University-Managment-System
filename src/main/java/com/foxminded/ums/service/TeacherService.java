@@ -1,5 +1,6 @@
 package com.foxminded.ums.service;
 
+import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.entities.Teacher;
 import com.foxminded.ums.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +26,16 @@ public class TeacherService {
         return teachers;
     }
 
-    public Teacher addTeacher(Teacher teacher) {
-        return teacherRepository.save(teacher);
+    public Teacher addTeacher(TeacherDto teacherDto) {
+        return teacherRepository.save(teacherDto.convertToEntity());
     }
 
-    public Teacher updateTeacher(Teacher teacher) {
-        return teacherRepository.save(teacher);
+    public Teacher updateTeacher(TeacherDto teacherDto) {
+        return teacherRepository.save(teacherDto.convertToEntity());
     }
 
-    public void deleteTeacher(Teacher teacher) {
-        teacherRepository.deleteById(teacher.getId());
+    public void deleteTeacher(TeacherDto teacherDto) {
+        teacherRepository.deleteById(teacherDto.convertToEntity().getId());
     }
 
 }
