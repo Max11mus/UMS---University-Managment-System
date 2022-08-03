@@ -7,18 +7,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
-//@Entity
-//@Table(name = "subject", schema = "public")
 public class Subject {
-    @Id
-    @GeneratedValue
-    @Column(name = "subject_id")
     UUID id;
-
-    @Column(name = "name_")
     String name;
-
-    @Column(name = "description")
     String description;
 
     public UUID getId() {

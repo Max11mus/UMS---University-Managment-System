@@ -9,26 +9,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.UUID;
 
-//@Entity
-//@Table(name = "lecture", schema = "public")
 public class Lecture {
-    @Id
-    @GeneratedValue
-    @Column(name = "lecture_id")
     private UUID id;
-
-    @Column(name = "topic")
     private String topic;
-
-    @Column(name = "description")
     private String description;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "teacher_id")
     private Teacher teacher;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "subject_id")
     private Subject subject;
 
     public UUID getId() {

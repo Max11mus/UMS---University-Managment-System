@@ -14,32 +14,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-//@Entity
-//@Table(name = "time_table_unit")
 public class TimeTableUnit {
-    @Id
-    @GeneratedValue
-    @Column(name = "time_table_unit_id")
     private UUID id;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "location_id")
     private Location location;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "lecture_id")
     private Lecture lecture;
-
-    @ManyToMany
-    @JoinTable(name = "timetableunit_groups",
-            joinColumns = @JoinColumn(name = "time_table_unit_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<Group> groups = new HashSet<>();
-
-    @Column(name = "begin_", nullable = false)
     private LocalDateTime begin;
-
-    @Column(name = "end_", nullable = false)
     private LocalDateTime end;
 
     public Location getLocation() {

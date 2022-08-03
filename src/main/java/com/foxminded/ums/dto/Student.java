@@ -10,22 +10,10 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.UUID;
 
-//@Entity
-//@Table(name = "student", schema = "public")
 public class Student {
-    @Id
-    @GeneratedValue
-    @Column(name = "student_id")
     private UUID id;
-
-    @OneToOne
-    @JoinColumn(name = "person_id")
     private PersonInfo personInfo;
-
-    @Column(name = "enroll_date")
     private LocalDate enrollDate;
-
-    @Column(name = "dropout_date")
     private LocalDate dropoutDate;
 
     public void setId(UUID id) {
