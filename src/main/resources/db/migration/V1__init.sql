@@ -1,3 +1,5 @@
+SET TIME ZONE 'UTC';
+
 CREATE SCHEMA IF NOT EXISTS ums;
 
 --- Group
@@ -17,7 +19,7 @@ CREATE TABLE ums.location_ (
 --- Person_info
 CREATE TABLE ums.person_info (
 	personinfo_id uuid,
-	name_ varchar(20) NOT NULL,
+	person_name varchar(20) NOT NULL,
 	surname varchar(20) NOT NULL,
 	birth_date date NOT NULL,
 	login varchar(255) NOT NULL,

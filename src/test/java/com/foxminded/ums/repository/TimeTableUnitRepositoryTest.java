@@ -8,24 +8,24 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 //@ExtendWith(SpringExtension.class)
 @DataJpaTest(properties = {
-        "spring.datasource.url=jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
+        "spring.datasource.url=jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=3",
         "spring.datasource.username=sa",
         "spring.datasource.password=sa",
         "spring.jpa.defer-datasource-initialization=true",
         "spring.jpa.hibernate.ddl-auto=none",
         "spring.flyway.enabled=false",
         "spring.jpa.show-sql=true",
-        "spring.jpa.properties.hibernate.format_sql=true"
+        "spring.jpa.properties.hibernate.format_sql=true",
+        "logging.level.org.hibernate.SQL=DEBUG",
+        "logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE",
+        "logging.level.org.springframework.jdbc.datasource.init.ScriptUtils=DEBUG"
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class TimeTableUnitRepositoryTest {
@@ -38,8 +38,10 @@ class TimeTableUnitRepositoryTest {
     void findByDayForStudent_ResultMustBeAsExpected() {
         //given
         UUID studentUuid = UUID.fromString("8cfe9e2c-7c4c-4b97-a590-bcc125eba4b7");
+        TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
+        System.out.println(localDateTime);
         String[] expectedTimeTableUnitUuids = {"e8647e6b-e68f-40e3-9e25-b370a38bddfe",
                 "19698d40-230e-4509-a94b-c4673f1269e5", "5d4981d1-c0b2-47c8-8c90-0a4f0e418976",
                 "f69b6ca6-96c3-4705-9527-6f8a63268331", "339dc084-219f-454e-82dd-7aee895aae2f",
@@ -53,9 +55,7 @@ class TimeTableUnitRepositoryTest {
         //when
         List<UUID> actualTimeTableUnitUuids =
                 timeTableUnitRepository.findByDayForStudent(studentUuid,
-                                localDateTime.getDayOfMonth(),
-                                localDateTime.getMonthValue(),
-                                localDateTime.getYear())
+                                localDateTime)
                         .stream()
                         .map(u -> u.getId())
                         .collect(Collectors.toList());
@@ -72,6 +72,7 @@ class TimeTableUnitRepositoryTest {
         //given
         UUID studentUuid = UUID.fromString("8cfe9e2c-7c4c-4b97-a590-bcc125eba4b7");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
         LocalDateTime localDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
         String[] expectedTimeTableUnitUuids = {"4ebaed1f-6234-4429-8d2d-89046c8ad1ae",
                 "8a5eda93-a8ad-454b-add1-60a29495c0ff", "0c6aa607-83d0-4c31-9903-d9ac1a3434e0",
@@ -99,7 +100,7 @@ class TimeTableUnitRepositoryTest {
 
         //when
         List<UUID> actualTimeTableUnitUuids =
-                timeTableUnitRepository.findByMonthForStudent(studentUuid, localDateTime.getYear(), localDateTime.getMonthValue())
+                timeTableUnitRepository.findByMonthForStudent(studentUuid, localDateTime)
                         .stream()
                         .map(u -> u.getId())
                         .collect(Collectors.toList());
@@ -116,6 +117,7 @@ class TimeTableUnitRepositoryTest {
         //given
         UUID teacherUuid = UUID.fromString("210dd67b-7810-4edf-98be-e9a2cffe6290");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
         LocalDateTime localDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
         String[] expectedTimeTableUnitUuids = {"339dc084-219f-454e-82dd-7aee895aae2f",
                 "e8647e6b-e68f-40e3-9e25-b370a38bddfe"};
@@ -127,10 +129,7 @@ class TimeTableUnitRepositoryTest {
 
         //when
         List<UUID> actualTimeTableUnitUuids =
-                timeTableUnitRepository.findByDayForTeacher(teacherUuid,
-                                localDateTime.getDayOfMonth(),
-                                localDateTime.getMonthValue(),
-                                localDateTime.getYear())
+                timeTableUnitRepository.findByDayForTeacher(teacherUuid, localDateTime)
                         .stream()
                         .map(u -> u.getId())
                         .collect(Collectors.toList());
@@ -147,6 +146,7 @@ class TimeTableUnitRepositoryTest {
         //given
         UUID teacherUuid = UUID.fromString("210dd67b-7810-4edf-98be-e9a2cffe6290");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
         LocalDateTime localDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
         String[] expectedTimeTableUnitUuids = {"826b603b-e40a-4126-8e92-c77e73150d51",
                 "8435c167-30b8-4f99-8fe5-4fafdbd68c6a", "8a5eda93-a8ad-454b-add1-60a29495c0ff",
@@ -164,9 +164,7 @@ class TimeTableUnitRepositoryTest {
 
         //when
         List<UUID> actualTimeTableUnitUuids =
-                timeTableUnitRepository.findByMonthForTeacher(teacherUuid,
-                                localDateTime.getYear(),
-                                localDateTime.getMonthValue())
+                timeTableUnitRepository.findByMonthForTeacher(teacherUuid, localDateTime)
                         .stream()
                         .map(u -> u.getId())
                         .collect(Collectors.toList());
