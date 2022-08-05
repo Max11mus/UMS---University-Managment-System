@@ -16,37 +16,19 @@ public interface TimeTableUnitRepository extends JpaRepository<TimeTableUnit, UU
             " JOIN tunit.groups grp " +
             " JOIN grp.students stdnt" +
             " WHERE stdnt.id = :id " +
-            " AND YEAR(tunit.begin) = YEAR(:pdate) " +
-            " AND MONTH(tunit.begin) = MONTH(:pdate) " +
-            " AND DAY(tunit.begin) = DAY(:pdate)")
-    List<TimeTableUnit> findByDayForStudent(@Param("id") UUID id,
-                                            @Param("pdate") LocalDateTime day);
-
-    @Query(value = "SELECT tunit FROM TimeTableUnit tunit " +
-            " JOIN tunit.groups grp " +
-            " JOIN grp.students stdnt" +
-            " WHERE stdnt.id = :id " +
-            " AND YEAR(tunit.begin) = YEAR(:pdate) " +
-            " AND MONTH(tunit.begin) = MONTH(:pdate)")
-    List<TimeTableUnit> findByMonthForStudent(@Param("id") UUID id,
-                                              @Param("pdate") LocalDateTime month);
+            " AND tunit.begin >= :pstartTime" +
+            " AND tunit.begin < :pendTime")
+    List<TimeTableUnit> findByBeginBetweenForStudent(@Param("id") UUID id,
+                                                     @Param("pstartTime") LocalDateTime startTimeInclude,
+                                                     @Param("pendTime") LocalDateTime endTimeExclude);
 
     @Query(value = "SELECT tunit FROM TimeTableUnit tunit " +
             " JOIN tunit.lecture lct " +
             " JOIN lct.teacher tchr" +
             " WHERE tchr.id = :id " +
-            " AND YEAR(tunit.begin) = YEAR(:pdate) " +
-            " AND MONTH(tunit.begin) = MONTH(:pdate) " +
-            " AND DAY(tunit.begin) = DAY(:pdate)")
-    List<TimeTableUnit> findByDayForTeacher(@Param("id") UUID id,
-                                            @Param("pdate") LocalDateTime day);
-
-    @Query(value = "SELECT tunit FROM TimeTableUnit tunit " +
-            " JOIN tunit.lecture lct " +
-            " JOIN lct.teacher tchr" +
-            " WHERE tchr.id = :id " +
-            " AND YEAR(tunit.begin) = YEAR(:pdate) " +
-            " AND MONTH(tunit.begin) = MONTH(:pdate)")
-    List<TimeTableUnit> findByMonthForTeacher(@Param("id") UUID id,
-                                              @Param("pdate") LocalDateTime month);
+            " AND tunit.begin >= :pstartTime" +
+            " AND tunit.begin < :pendTime")
+    List<TimeTableUnit> findByBeginBetweenForTeacher(@Param("id") UUID id,
+                                                     @Param("pstartTime") LocalDateTime startTimeInclude,
+                                                     @Param("pendTime") LocalDateTime endTimeExclude);
 }

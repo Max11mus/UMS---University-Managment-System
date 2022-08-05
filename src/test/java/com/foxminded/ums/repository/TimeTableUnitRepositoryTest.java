@@ -28,13 +28,14 @@ class TimeTableUnitRepositoryTest {
     private TimeTableUnitRepository timeTableUnitRepository;
 
     @Test
-    void findByDayForStudent_ResultMustBeAsExpected() {
+    void findByBeginBetweenForStudentPeriodOneDay_ResultMustBeAsExpected() {
         //given
         UUID studentUuid = UUID.fromString("8cfe9e2c-7c4c-4b97-a590-bcc125eba4b7");
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime localDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
-        System.out.println(localDateTime);
+        LocalDateTime startDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
+        LocalDateTime endDateTime = LocalDateTime.parse("2022-06-06 00:00", formatter);
+        System.out.println(startDateTime);
         String[] expectedTimeTableUnitUuids = {"e8647e6b-e68f-40e3-9e25-b370a38bddfe",
                 "19698d40-230e-4509-a94b-c4673f1269e5", "5d4981d1-c0b2-47c8-8c90-0a4f0e418976",
                 "f69b6ca6-96c3-4705-9527-6f8a63268331", "339dc084-219f-454e-82dd-7aee895aae2f",
@@ -47,8 +48,7 @@ class TimeTableUnitRepositoryTest {
 
         //when
         List<UUID> actualTimeTableUnitUuids =
-                timeTableUnitRepository.findByDayForStudent(studentUuid,
-                                localDateTime)
+                timeTableUnitRepository.findByBeginBetweenForStudent(studentUuid, startDateTime, endDateTime)
                         .stream()
                         .map(u -> u.getId())
                         .collect(Collectors.toList());
@@ -59,12 +59,13 @@ class TimeTableUnitRepositoryTest {
     }
 
     @Test
-    void findByMonthForStudent_ResultMustBeAsExpected() {
+    void findByBeginBetweenForStudentPeriodOneMonth_ResultMustBeAsExpected() {
         //given
         UUID studentUuid = UUID.fromString("8cfe9e2c-7c4c-4b97-a590-bcc125eba4b7");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
-        LocalDateTime localDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
+        LocalDateTime startDateTime = LocalDateTime.parse("2022-06-01 00:00", formatter);
+        LocalDateTime endDateTime = LocalDateTime.parse("2022-07-01 00:00", formatter);
         String[] expectedTimeTableUnitUuids = {"4ebaed1f-6234-4429-8d2d-89046c8ad1ae",
                 "8a5eda93-a8ad-454b-add1-60a29495c0ff", "0c6aa607-83d0-4c31-9903-d9ac1a3434e0",
                 "e8647e6b-e68f-40e3-9e25-b370a38bddfe", "19698d40-230e-4509-a94b-c4673f1269e5",
@@ -91,7 +92,7 @@ class TimeTableUnitRepositoryTest {
 
         //when
         List<UUID> actualTimeTableUnitUuids =
-                timeTableUnitRepository.findByMonthForStudent(studentUuid, localDateTime)
+                timeTableUnitRepository.findByBeginBetweenForStudent(studentUuid, startDateTime, endDateTime)
                         .stream()
                         .map(u -> u.getId())
                         .collect(Collectors.toList());
@@ -102,12 +103,13 @@ class TimeTableUnitRepositoryTest {
     }
 
     @Test
-    void findByDayForTeacher_ResultMustBeAsExpected() {
+    void findByBeginBetweenForTeacherPeriodOneDay_ResultMustBeAsExpected() {
         //given
         UUID teacherUuid = UUID.fromString("210dd67b-7810-4edf-98be-e9a2cffe6290");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
-        LocalDateTime localDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
+        LocalDateTime startDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
+        LocalDateTime endDateTime = LocalDateTime.parse("2022-06-06 00:00", formatter);
         String[] expectedTimeTableUnitUuids = {"339dc084-219f-454e-82dd-7aee895aae2f",
                 "e8647e6b-e68f-40e3-9e25-b370a38bddfe"};
         List<UUID> listExpectedTimeTableUnitUuids = Arrays.asList(expectedTimeTableUnitUuids)
@@ -118,7 +120,7 @@ class TimeTableUnitRepositoryTest {
 
         //when
         List<UUID> actualTimeTableUnitUuids =
-                timeTableUnitRepository.findByDayForTeacher(teacherUuid, localDateTime)
+                timeTableUnitRepository.findByBeginBetweenForTeacher(teacherUuid, startDateTime,endDateTime)
                         .stream()
                         .map(u -> u.getId())
                         .collect(Collectors.toList());
@@ -129,12 +131,13 @@ class TimeTableUnitRepositoryTest {
     }
 
     @Test
-    void findByMonthForTeacher_ResultMustBeAsExpected() {
+    void findByBeginBetweenForTeacherPeriodOneMonth_ResultMustBeAsExpected() {
         //given
         UUID teacherUuid = UUID.fromString("210dd67b-7810-4edf-98be-e9a2cffe6290");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
-        LocalDateTime localDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
+        LocalDateTime startDateTime = LocalDateTime.parse("2022-06-01 00:00", formatter);
+        LocalDateTime entDateTime = LocalDateTime.parse("2022-07-01 00:00", formatter);
         String[] expectedTimeTableUnitUuids = {"826b603b-e40a-4126-8e92-c77e73150d51",
                 "8435c167-30b8-4f99-8fe5-4fafdbd68c6a", "8a5eda93-a8ad-454b-add1-60a29495c0ff",
                 "aafd1787-9bfb-4f43-90d8-a988686c400a", "b5d9b3bb-99de-4643-bfd3-6b90b0170416",
@@ -151,7 +154,7 @@ class TimeTableUnitRepositoryTest {
 
         //when
         List<UUID> actualTimeTableUnitUuids =
-                timeTableUnitRepository.findByMonthForTeacher(teacherUuid, localDateTime)
+                timeTableUnitRepository.findByBeginBetweenForTeacher(teacherUuid, startDateTime,entDateTime)
                         .stream()
                         .map(u -> u.getId())
                         .collect(Collectors.toList());
