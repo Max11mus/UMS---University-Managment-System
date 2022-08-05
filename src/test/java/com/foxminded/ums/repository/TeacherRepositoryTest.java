@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
@@ -14,26 +15,21 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-@DataJpaTest(properties = {
-        "spring.datasource.url=jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=sa",
-        "spring.jpa.defer-datasource-initialization=true",
-        "spring.jpa.hibernate.ddl-auto=none",
-        "spring.flyway.enabled=false",
-        "spring.jpa.show-sql=true",
-        "spring.jpa.properties.hibernate.format_sql=true"
-})
+
+@DataJpaTest
+@TestPropertySource(locations = "/test.properties")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(value = "/delete_then_create_schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "/insert_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class TeacherRepositoryTest {
     @Autowired
     TeacherRepository teacherRepository;
 
     @Test
-    @Sql("/create_schema.sql")
-    @Sql("/insert_data.sql")
     void findById_ResultMustBeAsExpected() {
         //given
         UUID expectTeacherId = UUID.fromString("210dd67b-7810-4edf-98be-e9a2cffe6290");
@@ -47,8 +43,6 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    @Sql("/create_schema.sql")
-    @Sql("/insert_data.sql")
     void findAll_ResultMustBeAsExpected() {
         //given
         String[] expectedTeacherUuids = {"d87a90ba-1237-419a-b199-19dc389b4bbf", "210dd67b-7810-4edf-98be-e9a2cffe6290",
@@ -70,8 +64,6 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    @Sql("/create_schema.sql")
-    @Sql("/insert_data.sql")
     void saveNew_ResultMustBeAsExpected() {
         //given
         Teacher expectedTeacher = new Teacher();
@@ -86,8 +78,6 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    @Sql("/create_schema.sql")
-    @Sql("/insert_data.sql")
     void saveUpdate_ResultMustBeAsExpected() {
         //given
         UUID expectedTeacherUuid = UUID.fromString("6e1e9867-4670-4520-8b85-7c195e72bd6c");
@@ -105,8 +95,6 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    @Sql("/create_schema.sql")
-    @Sql("/insert_data.sql")
     void deleteById_ResultMustBeAsExpected() {
         //given
         UUID expectedTeacherUuid = UUID.fromString("6e1e9867-4670-4520-8b85-7c195e72bd6c");
