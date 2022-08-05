@@ -4,17 +4,22 @@ import com.foxminded.ums.entities.Person;
 import com.foxminded.ums.entities.Teacher;
 
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.TimeZone;
 import java.util.UUID;
 
 public class TeacherDto {
     private UUID id;
-    private Person personInfo;
+    private String name;
+    private String surname;
+    private LocalDate birthDate;
+    private TimeZone timeZone;
+    private String login;
+    private String email;
+    private String avatarPath;
+    private String hashedPassword;
     private String academicDegree;
     private LocalDate employmentDate;
-
-    public void setPersonInfo(Person personInfo) {
-        this.personInfo = personInfo;
-    }
 
     public UUID getId() {
         return id;
@@ -24,8 +29,68 @@ public class TeacherDto {
         this.id = id;
     }
 
-    public Person getPersonInfo() {
-        return personInfo;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
     }
 
     public String getAcademicDegree() {
@@ -48,13 +113,18 @@ public class TeacherDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        TeacherDto teacher = (TeacherDto) o;
-
-        if (!id.equals(teacher.id)) return false;
-        if (!personInfo.equals(teacher.personInfo)) return false;
-        if (!academicDegree.equals(teacher.academicDegree)) return false;
-        return employmentDate.equals(teacher.employmentDate);
+        TeacherDto that = (TeacherDto) o;
+        return Objects.equals(id, that.id)
+                && Objects.equals(name, that.name)
+                && Objects.equals(surname, that.surname)
+                && Objects.equals(birthDate, that.birthDate)
+                && Objects.equals(timeZone, that.timeZone)
+                && Objects.equals(login, that.login)
+                && Objects.equals(email, that.email)
+                && Objects.equals(avatarPath, that.avatarPath)
+                && Objects.equals(hashedPassword, that.hashedPassword)
+                && Objects.equals(academicDegree, that.academicDegree)
+                && Objects.equals(employmentDate, that.employmentDate);
     }
 
     @Override
@@ -65,10 +135,17 @@ public class TeacherDto {
     public Teacher convertToEntity(){
         Teacher entity = new Teacher();
 
-        entity.setId(this.getId());
-//        entity.setPersonInfo(this.getPersonInfo());
-        entity.setAcademicDegree(this.getAcademicDegree());
-        entity.setEmploymentDate(this.getEmploymentDate());
+        entity.setId(this.id);
+        entity.setName(this.name);
+        entity.setSurname(this.surname);
+        entity.setBirthDate(this.birthDate);
+        entity.setTimeZone(this.timeZone);
+        entity.setLogin(this.login);
+        entity.setEmail(this.email);
+        entity.setAvatarPath(this.avatarPath);
+        entity.setHashedPassword(this.hashedPassword);
+        entity.setAcademicDegree(this.academicDegree);
+        entity.setEmploymentDate(this.employmentDate);
 
         return  entity;
     }
