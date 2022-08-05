@@ -11,14 +11,14 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "group_", schema = "ums")
+@Table(name = "group_table", schema = "ums")
 public class Group {
     @Id
     @GeneratedValue
     @Column(name = "group_id")
     private UUID id;
 
-    @Column(name = "name_")
+    @Column(name = "group_name")
     private String name;
 
     @OneToMany

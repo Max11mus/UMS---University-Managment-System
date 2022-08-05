@@ -1,24 +1,20 @@
 package com.foxminded.ums.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.UUID;
 
-@Entity
-@Table(name = "person_info", schema = "ums")
-public class PersonInfo {
+@MappedSuperclass
+public abstract class Person {
 
     @Id
     @GeneratedValue
-    @Column(name = "personinfo_id")
+    @Column(name = "person_id")
     private UUID id;
 
-    @Column(name = "name_")
+    @Column(name = "person_name")
     private String name;
 
     @Column(name = "surname")
@@ -117,22 +113,20 @@ public class PersonInfo {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        PersonInfo that = (PersonInfo) o;
-
-        if (!id.equals(that.id)) return false;
-        if (!name.equals(that.name)) return false;
-        if (!surname.equals(that.surname)) return false;
-        if (!birthDate.equals(that.birthDate)) return false;
-        if (!timeZone.equals(that.timeZone)) return false;
-        if (!login.equals(that.login)) return false;
-        if (!email.equals(that.email)) return false;
-        if (!avatarPath.equals(that.avatarPath)) return false;
-        return hashedPassword.equals(that.hashedPassword);
+        Person person = (Person) o;
+        return Objects.equals(id, person.id)
+                && Objects.equals(name, person.name)
+                && Objects.equals(surname, person.surname)
+                && Objects.equals(birthDate, person.birthDate)
+                && Objects.equals(timeZone, person.timeZone)
+                && Objects.equals(login, person.login)
+                && Objects.equals(email, person.email)
+                && Objects.equals(avatarPath, person.avatarPath)
+                && Objects.equals(hashedPassword, person.hashedPassword);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(id);
     }
 }

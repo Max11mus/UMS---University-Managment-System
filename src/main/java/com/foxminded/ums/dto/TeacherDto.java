@@ -1,6 +1,6 @@
 package com.foxminded.ums.dto;
 
-import com.foxminded.ums.entities.PersonInfo;
+import com.foxminded.ums.entities.Person;
 import com.foxminded.ums.entities.Teacher;
 
 import java.time.LocalDate;
@@ -8,11 +8,11 @@ import java.util.UUID;
 
 public class TeacherDto {
     private UUID id;
-    private PersonInfo personInfo;
+    private Person personInfo;
     private String academicDegree;
     private LocalDate employmentDate;
 
-    public void setPersonInfo(PersonInfo personInfo) {
+    public void setPersonInfo(Person personInfo) {
         this.personInfo = personInfo;
     }
 
@@ -24,7 +24,7 @@ public class TeacherDto {
         this.id = id;
     }
 
-    public PersonInfo getPersonInfo() {
+    public Person getPersonInfo() {
         return personInfo;
     }
 
@@ -66,7 +66,7 @@ public class TeacherDto {
         Teacher entity = new Teacher();
 
         entity.setId(this.getId());
-        entity.setPersonInfo(this.getPersonInfo());
+//        entity.setPersonInfo(this.getPersonInfo());
         entity.setAcademicDegree(this.getAcademicDegree());
         entity.setEmploymentDate(this.getEmploymentDate());
 

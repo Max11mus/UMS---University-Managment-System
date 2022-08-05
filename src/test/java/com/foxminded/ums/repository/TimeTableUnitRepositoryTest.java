@@ -4,37 +4,30 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//@ExtendWith(SpringExtension.class)
-@DataJpaTest(properties = {
-        "spring.datasource.url=jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=3",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=sa",
-        "spring.jpa.defer-datasource-initialization=true",
-        "spring.jpa.hibernate.ddl-auto=none",
-        "spring.flyway.enabled=false",
-        "spring.jpa.show-sql=true",
-        "spring.jpa.properties.hibernate.format_sql=true",
-        "logging.level.org.hibernate.SQL=DEBUG",
-        "logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE",
-        "logging.level.org.springframework.jdbc.datasource.init.ScriptUtils=DEBUG"
-})
+@DataJpaTest
+@TestPropertySource(locations = "/test.properties")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(value = "/delete_then_create_schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "/insert_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class TimeTableUnitRepositoryTest {
     @Autowired
     private TimeTableUnitRepository timeTableUnitRepository;
 
     @Test
-    @Sql("/create_schema.sql")
-    @Sql("/insert_data.sql")
     void findByDayForStudent_ResultMustBeAsExpected() {
         //given
         UUID studentUuid = UUID.fromString("8cfe9e2c-7c4c-4b97-a590-bcc125eba4b7");
@@ -66,8 +59,6 @@ class TimeTableUnitRepositoryTest {
     }
 
     @Test
-    @Sql("/create_schema.sql")
-    @Sql("/insert_data.sql")
     void findByMonthForStudent_ResultMustBeAsExpected() {
         //given
         UUID studentUuid = UUID.fromString("8cfe9e2c-7c4c-4b97-a590-bcc125eba4b7");
@@ -111,8 +102,6 @@ class TimeTableUnitRepositoryTest {
     }
 
     @Test
-    @Sql("/create_schema.sql")
-    @Sql("/insert_data.sql")
     void findByDayForTeacher_ResultMustBeAsExpected() {
         //given
         UUID teacherUuid = UUID.fromString("210dd67b-7810-4edf-98be-e9a2cffe6290");
@@ -140,8 +129,6 @@ class TimeTableUnitRepositoryTest {
     }
 
     @Test
-    @Sql("/create_schema.sql")
-    @Sql("/insert_data.sql")
     void findByMonthForTeacher_ResultMustBeAsExpected() {
         //given
         UUID teacherUuid = UUID.fromString("210dd67b-7810-4edf-98be-e9a2cffe6290");

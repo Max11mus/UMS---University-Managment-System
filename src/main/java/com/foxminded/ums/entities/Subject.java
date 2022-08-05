@@ -15,7 +15,7 @@ public class Subject {
     @Column(name = "subject_id")
     UUID id;
 
-    @Column(name = "name_")
+    @Column(name = "subject_name")
     String name;
 
     @Column(name = "description")
