@@ -73,7 +73,7 @@ VALUES('4dabb352-5919-4727-8b05-f9afe2001a22'::uuid, 'HTML (HyperText Markup Lan
 --- Lectures
 INSERT INTO ums.lecture
 (lecture_id, topic, description, teacher_id, subject_id)
-VALUES('22b4b0c8-a48d-4f1a-a8aa-a6335da452ed'::uuid, 'Object-oriented design (OOD) is the process of using an object-oriented methodology to design a computing system or application. This technique enables the implementation of a software solution based on the concepts of objects. OOD serves as part of the object-oriented programming (OOP) process or lifecycle.', '210dd67b-7810-4edf-98be-e9a2cffe6290'::uuid, 'e6568e42-3a1b-415b-954a-4a13c1123fbd'::uuid);
+VALUES('22b4b0c8-a48d-4f1a-a8aa-a6335da452ed'::uuid, 'Object Oriented Design in Java', 'Object-oriented design (OOD) is the process of using an object-oriented methodology to design a computing system or application. This technique enables the implementation of a software solution based on the concepts of objects. OOD serves as part of the object-oriented programming (OOP) process or lifecycle.', '210dd67b-7810-4edf-98be-e9a2cffe6290'::uuid, 'e6568e42-3a1b-415b-954a-4a13c1123fbd'::uuid);
 INSERT INTO ums.lecture
 (lecture_id, topic, description, teacher_id, subject_id)
 VALUES('4b0c8869-989c-4131-8b93-36a224886b9a'::uuid, 'Generics in Java', 'Generics are a facility of generic programming that were added to the Java programming language in 2004 within version J2SE 5.0. They were designed to extend Java''s type system to allow "a type or method to operate on objects of various types while providing compile-time type safety".', '6e1e9867-4670-4520-8b85-7c195e72bd6c'::uuid, 'e6568e42-3a1b-415b-954a-4a13c1123fbd'::uuid);

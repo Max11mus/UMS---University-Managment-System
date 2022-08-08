@@ -23,14 +23,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @DataJpaTest
 @TestPropertySource(locations = "/test.properties")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(value = "/delete_then_create_schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "/create_schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "/insert_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "/clear.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class TeacherRepositoryTest {
     @Autowired
     TeacherRepository teacherRepository;
 
     @Test
-    void findById_ResultMustBeAsExpected() {
+    void findById_MustFindExistedTeacher() {
         //given
         UUID expectTeacherId = UUID.fromString("210dd67b-7810-4edf-98be-e9a2cffe6290");
 
@@ -43,7 +44,7 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    void findAll_ResultMustBeAsExpected() {
+    void findAll_MustFindAllTeachers() {
         //given
         String[] expectedTeacherUuids = {"d87a90ba-1237-419a-b199-19dc389b4bbf", "210dd67b-7810-4edf-98be-e9a2cffe6290",
                 "6e1e9867-4670-4520-8b85-7c195e72bd6c"};
@@ -55,8 +56,8 @@ class TeacherRepositoryTest {
 
         //when
         List<UUID> actualTeacherUuids = new ArrayList<>();
-        teacherRepository.findAll()
-                .forEach(t -> actualTeacherUuids.add(t.getId()));
+        Iterable<Teacher> all = teacherRepository.findAll();
+        all.forEach(s -> actualTeacherUuids.add(s.getId()));
         Collections.sort(actualTeacherUuids);
 
         //then
@@ -64,7 +65,7 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    void saveNew_ResultMustBeAsExpected() {
+    void save_MustCreateNewTeacher() {
         //given
         Teacher expectedTeacher = new Teacher();
 
@@ -78,7 +79,7 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    void saveUpdate_ResultMustBeAsExpected() {
+    void save_MustUpdateExistedTeacher() {
         //given
         UUID expectedTeacherUuid = UUID.fromString("6e1e9867-4670-4520-8b85-7c195e72bd6c");
         String expectedAcademicDegree = "AcademicDegree_Test";
@@ -95,7 +96,7 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    void deleteById_ResultMustBeAsExpected() {
+    void deleteById_MustDeleteExistedTeacher() {
         //given
         UUID expectedTeacherUuid = UUID.fromString("6e1e9867-4670-4520-8b85-7c195e72bd6c");
         Teacher expectedTeacherBeforeDelete = teacherRepository.findById(expectedTeacherUuid).get();

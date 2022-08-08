@@ -23,14 +23,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @DataJpaTest
 @TestPropertySource(locations = "/test.properties")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(value = "/delete_then_create_schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "/create_schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "/insert_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "/clear.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class StudentRepositoryTest {
     @Autowired
     StudentRepository studentRepository;
 
     @Test
-    void findById_ResultMustBeAsExpected() {
+    void findById_MustFindExistedStudent() {
         //given
         UUID expectStudentId = UUID.fromString("f57e0ffe-6118-44a8-b39d-b2da86b65aff");
 
@@ -43,11 +44,10 @@ class StudentRepositoryTest {
     }
 
     @Test
-    void findAll_ResultMustBeAsExpected() {
+    void findAll_MustFindAllStudents() {
         //given
-        String[] expectedStudentUuids = {"8cfe9e2c-7c4c-4b97-a590-bcc125eba4b7", "b24d4f8d-f32f-4f88-a219-ebeb30568a1b",
-                "c3e47148-adcf-4ee3-81f6-6b79b83a41ca", "f57e0ffe-6118-44a8-b39d-b2da86b65aff",
-                "12611b1e-b277-4e64-8ff3-243a5d6fbc2d"};
+        String[] expectedStudentUuids = {"8cfe9e2c-7c4c-4b97-a590-bcc125eba4b7", "c3e47148-adcf-4ee3-81f6-6b79b83a41ca",
+                "f57e0ffe-6118-44a8-b39d-b2da86b65aff"};
         List<UUID> listExpectedStudentUuids = Arrays.asList(expectedStudentUuids)
                 .stream()
                 .map(s -> UUID.fromString(s))
@@ -56,8 +56,8 @@ class StudentRepositoryTest {
 
         //when
         List<UUID> actualStudentUuids = new ArrayList<>();
-        studentRepository.findAll()
-                .forEach(t -> actualStudentUuids.add(t.getId()));
+        Iterable<Student> all = studentRepository.findAll();
+        all.forEach(s -> actualStudentUuids.add(s.getId()));
         Collections.sort(actualStudentUuids);
 
         //then
@@ -65,7 +65,7 @@ class StudentRepositoryTest {
     }
 
     @Test
-    void saveNew_ResultMustBeAsExpected() {
+    void save_MustCreateNewStudent() {
         //given
         Student expectedStudent = new Student();
 
@@ -73,13 +73,13 @@ class StudentRepositoryTest {
         studentRepository.save(expectedStudent);
         Student actualStudent = studentRepository.findById(expectedStudent.getId()).get();
 
-                //then
+        //then
         assertNotNull(actualStudent);
         assertEquals(expectedStudent, actualStudent);
     }
 
     @Test
-    void saveUpdate_ResultMustBeAsExpected() {
+    void save_MustUpdateExistedStudent() {
         //given
         UUID expectedStudentUuid = UUID.fromString("f57e0ffe-6118-44a8-b39d-b2da86b65aff");
         String surName = "surName_Test";
@@ -96,7 +96,7 @@ class StudentRepositoryTest {
     }
 
     @Test
-    void deleteById_ResultMustBeAsExpected() {
+    void deleteById_MustDeleteExistedStudent() {
         //given
         UUID expectedStudentUuid = UUID.fromString("f57e0ffe-6118-44a8-b39d-b2da86b65aff");
         Student expectedStudentBeforeDelete = studentRepository.findById(expectedStudentUuid).get();
