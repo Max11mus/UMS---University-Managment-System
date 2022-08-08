@@ -23,14 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @DataJpaTest
 @TestPropertySource(locations = "/test.properties")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(value = "/create_schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "/insert_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "/clear.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(value = "/clear_data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class StudentRepositoryTest {
     @Autowired
     StudentRepository studentRepository;
 
     @Test
+    @Sql(value = "/create_schema.sql")
+    @Sql(value = "/insert_only_students.sql")
     void findById_MustFindExistedStudent() {
         //given
         UUID expectStudentId = UUID.fromString("f57e0ffe-6118-44a8-b39d-b2da86b65aff");
@@ -44,6 +44,8 @@ class StudentRepositoryTest {
     }
 
     @Test
+    @Sql(value = "/create_schema.sql")
+    @Sql(value = "/insert_only_students.sql")
     void findAll_MustFindAllStudents() {
         //given
         String[] expectedStudentUuids = {"8cfe9e2c-7c4c-4b97-a590-bcc125eba4b7", "c3e47148-adcf-4ee3-81f6-6b79b83a41ca",
@@ -65,6 +67,7 @@ class StudentRepositoryTest {
     }
 
     @Test
+    @Sql(value = "/create_schema.sql")
     void save_MustCreateNewStudent() {
         //given
         Student expectedStudent = new Student();
@@ -79,6 +82,8 @@ class StudentRepositoryTest {
     }
 
     @Test
+    @Sql(value = "/create_schema.sql")
+    @Sql(value = "/insert_only_students.sql")
     void save_MustUpdateExistedStudent() {
         //given
         UUID expectedStudentUuid = UUID.fromString("f57e0ffe-6118-44a8-b39d-b2da86b65aff");
@@ -96,6 +101,8 @@ class StudentRepositoryTest {
     }
 
     @Test
+    @Sql(value = "/create_schema.sql")
+    @Sql(value = "/insert_only_students.sql")
     void deleteById_MustDeleteExistedStudent() {
         //given
         UUID expectedStudentUuid = UUID.fromString("f57e0ffe-6118-44a8-b39d-b2da86b65aff");
