@@ -23,12 +23,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @TestPropertySource(locations = "/test.properties")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(value = "/clear_data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class StudentRepositoryTest {
     @Autowired
     private StudentRepository studentRepository;
 
     @Test
-     @Sql(value = "/insert_only_students.sql")
+    @Sql(value = "/insert_only_students.sql")
     void findById_MustFindExistedStudent() {
         //given
         UUID expectStudentId = UUID.fromString("f57e0ffe-6118-44a8-b39d-b2da86b65aff");
