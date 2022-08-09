@@ -29,7 +29,6 @@ class TeacherRepositoryTest {
     TeacherRepository teacherRepository;
 
     @Test
-    @Sql(value = "/create_schema.sql")
     @Sql(value = "/insert_only_teachers.sql")
     void findById_MustFindExistedTeacher() {
         //given
@@ -44,7 +43,6 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    @Sql(value = "/create_schema.sql")
     @Sql(value = "/insert_only_teachers.sql")
     void findAll_MustFindAllTeachers() {
         //given
@@ -67,7 +65,6 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    @Sql(value = "/create_schema.sql")
     void save_MustCreateNewTeacher() {
         //given
         Teacher expectedTeacher = new Teacher();
@@ -82,7 +79,6 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    @Sql(value = "/create_schema.sql")
     @Sql(value = "/insert_only_teachers.sql")
     void save_MustUpdateExistedTeacher() {
         //given
@@ -101,7 +97,6 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    @Sql(value = "/create_schema.sql")
     @Sql(value = "/insert_only_teachers.sql")
     void deleteById_MustDeleteExistedTeacher() {
         //given

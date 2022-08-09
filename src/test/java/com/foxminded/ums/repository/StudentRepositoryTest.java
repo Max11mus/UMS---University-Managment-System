@@ -1,10 +1,12 @@
 package com.foxminded.ums.repository;
 
 import com.foxminded.ums.entities.Student;
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -15,22 +17,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @DataJpaTest
 @TestPropertySource(locations = "/test.properties")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(value = "/clear_data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class StudentRepositoryTest {
     @Autowired
-    StudentRepository studentRepository;
+    private StudentRepository studentRepository;
 
     @Test
-    @Sql(value = "/create_schema.sql")
-    @Sql(value = "/insert_only_students.sql")
+     @Sql(value = "/insert_only_students.sql")
     void findById_MustFindExistedStudent() {
         //given
         UUID expectStudentId = UUID.fromString("f57e0ffe-6118-44a8-b39d-b2da86b65aff");
@@ -44,7 +42,6 @@ class StudentRepositoryTest {
     }
 
     @Test
-    @Sql(value = "/create_schema.sql")
     @Sql(value = "/insert_only_students.sql")
     void findAll_MustFindAllStudents() {
         //given
@@ -67,7 +64,6 @@ class StudentRepositoryTest {
     }
 
     @Test
-    @Sql(value = "/create_schema.sql")
     void save_MustCreateNewStudent() {
         //given
         Student expectedStudent = new Student();
@@ -82,7 +78,6 @@ class StudentRepositoryTest {
     }
 
     @Test
-    @Sql(value = "/create_schema.sql")
     @Sql(value = "/insert_only_students.sql")
     void save_MustUpdateExistedStudent() {
         //given
@@ -101,7 +96,6 @@ class StudentRepositoryTest {
     }
 
     @Test
-    @Sql(value = "/create_schema.sql")
     @Sql(value = "/insert_only_students.sql")
     void deleteById_MustDeleteExistedStudent() {
         //given
