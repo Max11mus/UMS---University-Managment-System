@@ -3,21 +3,21 @@ SET TIME ZONE 'UTC';
 CREATE SCHEMA IF NOT EXISTS ums;
 
 --- Group
-CREATE TABLE ums.group_table (
+CREATE TABLE IF NOT EXISTS ums.group_table (
 	group_id uuid,
 	group_name varchar(128) NOT NULL,
 	CONSTRAINT pk_group PRIMARY KEY (group_id)
 );
 
 --- Location
-CREATE TABLE ums.location_table (
+CREATE TABLE IF NOT EXISTS ums.location_table (
 	location_id uuid,
 	address varchar(255) NOT NULL,
 	CONSTRAINT pk_location PRIMARY KEY (location_id)
 );
 
 --- Subject
-CREATE TABLE ums.subject (
+CREATE TABLE IF NOT EXISTS ums.subject (
 	subject_id uuid,
 	subject_name  varchar(255) NOT NULL,
 	description varchar(1024),
@@ -25,7 +25,7 @@ CREATE TABLE ums.subject (
 );
 
 --- Student
-CREATE TABLE ums.student (
+CREATE TABLE IF NOT EXISTS ums.student (
     person_id uuid,
 	person_name varchar(20) NOT NULL,
 	surname varchar(20) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE ums.student (
 );
 
 --- Teacher
-CREATE TABLE ums.teacher (
+CREATE TABLE IF NOT EXISTS ums.teacher (
 	person_id uuid,
     person_name varchar(20) NOT NULL,
     surname varchar(20) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE ums.teacher (
 );
 
 --- Lecture
-CREATE TABLE ums.lecture (
+CREATE TABLE IF NOT EXISTS ums.lecture (
 	lecture_id uuid,
 	topic varchar(255) NOT NULL,
 	description varchar(1024),
@@ -75,7 +75,7 @@ CREATE TABLE ums.lecture (
 );
 
 --- Time_table_unit definition
-CREATE TABLE ums.time_table_unit (
+CREATE TABLE IF NOT EXISTS ums.time_table_unit (
 	time_table_unit_id uuid,
 	location_id uuid,
 	lecture_id uuid,
@@ -87,7 +87,7 @@ CREATE TABLE ums.time_table_unit (
 );
 
 --- timetableunit_groups;
-CREATE TABLE ums.timetableunit_groups (
+CREATE TABLE IF NOT EXISTS ums.timetableunit_groups (
 	group_id uuid,
 	time_table_unit_id uuid,
 	CONSTRAINT fk_timtabunigro_on_group FOREIGN KEY (group_id) REFERENCES ums.group_table(group_id),

@@ -36,10 +36,10 @@ public class TimeTableUnit {
             inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<Group> groups = new HashSet<>();
 
-    @Column(name = "begin_", nullable = false)
+    @Column(name = "begin_time", nullable = false)
     private LocalDateTime begin;
 
-    @Column(name = "end_", nullable = false)
+    @Column(name = "end_time", nullable = false)
     private LocalDateTime end;
 
     public Location getLocation() {
