@@ -86,16 +86,4 @@ public class TimeTableUnitDto {
         return id.hashCode();
     }
 
-    public TimeTableUnit convertToEntity(){
-        TimeTableUnit entity = new TimeTableUnit();
-
-        entity.setId(this.getId());
-        entity.setBegin(this.getBegin());
-        entity.setEnd(this.getEnd());
-        entity.setGroups(this.getGroups());
-        entity.setLecture(this.getLecture());
-        entity.setLocation(this.getLocation());
-
-        return  entity;
-    }
 }

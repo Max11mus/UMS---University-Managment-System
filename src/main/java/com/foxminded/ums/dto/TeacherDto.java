@@ -132,21 +132,4 @@ public class TeacherDto {
         return id.hashCode();
     }
 
-    public Teacher convertToEntity(){
-        Teacher entity = new Teacher();
-
-        entity.setId(this.id);
-        entity.setName(this.name);
-        entity.setSurname(this.surname);
-        entity.setBirthDate(this.birthDate);
-        entity.setTimeZone(this.timeZone);
-        entity.setLogin(this.login);
-        entity.setEmail(this.email);
-        entity.setAvatarPath(this.avatarPath);
-        entity.setHashedPassword(this.hashedPassword);
-        entity.setAcademicDegree(this.academicDegree);
-        entity.setEmploymentDate(this.employmentDate);
-
-        return  entity;
-    }
 }
