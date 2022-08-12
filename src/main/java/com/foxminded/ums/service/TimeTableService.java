@@ -12,48 +12,49 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TimeTableService {
     @Autowired
     TimeTableUnitRepository timeTableUnitRepository;
 
-    public List<TimeTableUnitDto> findByDayForStudent(StudentDto studentDto, LocalDate dayLocalDate) {
+    public List<TimeTableUnitDto> findByDayForStudent(UUID studentUuid, LocalDate dayLocalDate) {
         LocalDateTime startDateTime = dayLocalDate.atStartOfDay();
         LocalDateTime endDateTime = startDateTime.plusDays(1);
 
         List<TimeTableUnitDto> timeTableUnitDtos = new ArrayList<>();
-        timeTableUnitRepository.findByBeginBetweenForStudent(studentDto.getId(), startDateTime, endDateTime)
+        timeTableUnitRepository.findByBeginBetweenForStudent(studentUuid, startDateTime, endDateTime)
                 .forEach(t -> timeTableUnitDtos.add(convertToDto(t)));
         return timeTableUnitDtos;
     }
 
-    public List<TimeTableUnitDto> findByMonthForStudent(StudentDto studentDto, LocalDate monthLocalDate) {
+    public List<TimeTableUnitDto> findByMonthForStudent(UUID studentUuid, LocalDate monthLocalDate) {
         LocalDateTime startDateTime = monthLocalDate.withDayOfMonth(1).atStartOfDay();
         LocalDateTime endDateTime = startDateTime.plusMonths(1);
 
         List<TimeTableUnitDto> timeTableUnitDtos = new ArrayList<>();
-        timeTableUnitRepository.findByBeginBetweenForStudent(studentDto.getId(), startDateTime, endDateTime)
+        timeTableUnitRepository.findByBeginBetweenForStudent(studentUuid, startDateTime, endDateTime)
                 .forEach(t -> timeTableUnitDtos.add(convertToDto(t)));
         return timeTableUnitDtos;
     }
 
-    public List<TimeTableUnitDto> findByDayForTeacher(TeacherDto teacherDto, LocalDate dayLocalDate) {
+    public List<TimeTableUnitDto> findByDayForTeacher(UUID teacherUuid, LocalDate dayLocalDate) {
         LocalDateTime startDateTime = dayLocalDate.atStartOfDay();
         LocalDateTime endDateTime = startDateTime.plusDays(1);
 
         List<TimeTableUnitDto> timeTableUnitDtos = new ArrayList<>();
-        timeTableUnitRepository.findByBeginBetweenForStudent(teacherDto.getId(), startDateTime, endDateTime)
+        timeTableUnitRepository.findByBeginBetweenForStudent(teacherUuid, startDateTime, endDateTime)
                 .forEach(t -> timeTableUnitDtos.add(convertToDto(t)));
         return timeTableUnitDtos;
     }
 
-    public List<TimeTableUnitDto> findByMonthForTeacher(TeacherDto teacherDto, LocalDate monthLocalDate) {
+    public List<TimeTableUnitDto> findByMonthForTeacher(UUID teacherUuid, LocalDate monthLocalDate) {
         LocalDateTime startDateTime = monthLocalDate.withDayOfMonth(1).atStartOfDay();
         LocalDateTime endDateTime = startDateTime.plusMonths(1);
 
         List<TimeTableUnitDto> timeTableUnitDtos = new ArrayList<>();
-        timeTableUnitRepository.findByBeginBetweenForTeacher(teacherDto.getId(), startDateTime, endDateTime)
+        timeTableUnitRepository.findByBeginBetweenForTeacher(teacherUuid, startDateTime, endDateTime)
                 .forEach(t -> timeTableUnitDtos.add(convertToDto(t)));
         return timeTableUnitDtos;
     }

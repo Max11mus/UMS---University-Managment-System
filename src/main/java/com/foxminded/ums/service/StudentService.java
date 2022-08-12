@@ -18,9 +18,8 @@ public class StudentService {
     @Autowired
     StudentRepository studentRepository;
 
-    public StudentDto findStudent(Student student) {
-        UUID id = student.getId();
-        return convertToDto(studentRepository.findById(id).get());
+    public StudentDto findStudent(UUID studentId) {
+        return convertToDto(studentRepository.findById(studentId).get());
     }
 
     public List<StudentDto> findStudents() {
@@ -30,21 +29,20 @@ public class StudentService {
     }
 
     @Transactional
-    public Student addStudent(StudentDto studentDto) {
+    public StudentDto addStudent(StudentDto studentDto) {
         Student entity = convertToEntity(studentDto);
-        return studentRepository.save(entity);
+        return convertToDto(studentRepository.save(entity));
     }
 
     @Transactional
-    public Student updateStudent(StudentDto studentDto) {
+    public StudentDto updateStudent(StudentDto studentDto) {
         Student entity = convertToEntity(studentDto);
-        return studentRepository.save(entity);
+        return convertToDto(studentRepository.save(entity));
     }
 
     @Transactional
-    public void deleteStudent(StudentDto studentDto) {
-        UUID id = studentDto.getId();
-        studentRepository.deleteById(id);
+    public void deleteStudent(UUID studentUuid) {
+        studentRepository.deleteById(studentUuid);
     }
 
     public Student convertToEntity(StudentDto studentDto){

@@ -16,9 +16,8 @@ public class TeacherService {
     @Autowired
     TeacherRepository teacherRepository;
 
-    public Teacher findTeacher(Teacher teacher) {
-        UUID id = teacher.getId();
-        return teacherRepository.findById(id).get();
+    public TeacherDto findTeacher(UUID teacherUuid) {
+        return convertToDto(teacherRepository.findById(teacherUuid).get());
     }
 
     public List<TeacherDto> findTeachers() {
@@ -28,21 +27,20 @@ public class TeacherService {
     }
 
     @Transactional
-    public Teacher addTeacher(TeacherDto teacherDto) {
+    public TeacherDto addTeacher(TeacherDto teacherDto) {
         Teacher entity = convertToEntity(teacherDto);
-        return teacherRepository.save(entity);
+        return convertToDto(teacherRepository.save(entity));
     }
 
     @Transactional
-    public Teacher updateTeacher(TeacherDto teacherDto) {
+    public TeacherDto updateTeacher(TeacherDto teacherDto) {
         Teacher entity = convertToEntity(teacherDto);
-        return teacherRepository.save(entity);
+        return convertToDto(teacherRepository.save(entity));
     }
 
     @Transactional
-    public void deleteTeacher(TeacherDto teacherDto) {
-        UUID id = teacherDto.getId();
-        teacherRepository.deleteById(id);
+    public void deleteTeacher(UUID teacherUuid) {
+        teacherRepository.deleteById(teacherUuid);
     }
 
     public Teacher convertToEntity(TeacherDto teacherDto){
