@@ -134,21 +134,5 @@ public class StudentDto {
         return id.hashCode();
     }
 
-    public Student convertToEntity(){
-        Student entity = new Student();
 
-        entity.setId(this.id);
-        entity.setName(this.name);
-        entity.setSurname(this.surname);
-        entity.setBirthDate(this.birthDate);
-        entity.setTimeZone(this.timeZone);
-        entity.setLogin(this.login);
-        entity.setEmail(this.email);
-        entity.setAvatarPath(this.avatarPath);
-        entity.setHashedPassword(this.hashedPassword);
-        entity.setDropoutDate(this.dropoutDate);
-        entity.setEnrollDate(this.enrollDate);
-
-        return  entity;
-    }
 }
