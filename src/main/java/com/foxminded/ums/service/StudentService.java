@@ -3,9 +3,9 @@ package com.foxminded.ums.service;
 
 import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.entities.Student;
-import com.foxminded.ums.entities.Teacher;
 import com.foxminded.ums.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,6 +26,13 @@ public class StudentService {
         List<StudentDto> studentsDto = new ArrayList<>();
         studentRepository.findAll().forEach(s -> studentsDto.add(convertToDto(s)));
         return studentsDto;
+    }
+
+    public List<StudentDto> findStudentsPageable(int pageNumber, int pageSize) {
+        List<StudentDto> studentsDto = new ArrayList<>();
+        studentRepository.findAll(PageRequest.of(pageNumber, pageSize)).forEach(s -> studentsDto.add(convertToDto(s)));
+        return studentsDto;
+
     }
 
     @Transactional
