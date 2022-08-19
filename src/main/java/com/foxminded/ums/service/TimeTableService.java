@@ -1,7 +1,5 @@
 package com.foxminded.ums.service;
 
-import com.foxminded.ums.dto.StudentDto;
-import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.dto.TimeTableUnitDto;
 import com.foxminded.ums.entities.TimeTableUnit;
 import com.foxminded.ums.repository.TimeTableUnitRepository;

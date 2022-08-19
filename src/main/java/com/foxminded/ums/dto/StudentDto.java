@@ -1,9 +1,5 @@
 package com.foxminded.ums.dto;
 
-import com.foxminded.ums.entities.Person;
-import com.foxminded.ums.entities.Student;
-
-import javax.persistence.Column;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.TimeZone;

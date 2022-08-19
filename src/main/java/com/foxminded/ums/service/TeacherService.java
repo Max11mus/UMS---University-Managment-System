@@ -1,9 +1,11 @@
 package com.foxminded.ums.service;
 
 import com.foxminded.ums.dto.TeacherDto;
+import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.entities.Teacher;
 import com.foxminded.ums.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,6 +28,13 @@ public class TeacherService {
         return teachersDto;
     }
 
+    public List<TeacherDto> findTeachersPageable(int pageNumber, int pageSize) {
+        List<TeacherDto> teachersDto = new ArrayList<>();
+        teacherRepository.findAll(PageRequest.of(pageNumber, pageSize)).forEach(s -> teachersDto.add(convertToDto(s)));
+        return teachersDto;
+
+    }
+    
     @Transactional
     public TeacherDto addTeacher(TeacherDto teacherDto) {
         Teacher entity = convertToEntity(teacherDto);
