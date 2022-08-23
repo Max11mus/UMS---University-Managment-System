@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(value = "/insert_all_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "/clear_data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class TimeTableUnitRepositoryTest {
+class ддTimeTableUnitRepositoryTest {
     @Autowired
     private TimeTableUnitRepository timeTableUnitRepository;
 

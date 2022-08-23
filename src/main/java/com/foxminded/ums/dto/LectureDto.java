@@ -1,10 +1,12 @@
 package com.foxminded.ums.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxminded.ums.entities.Subject;
 import com.foxminded.ums.entities.Teacher;
 
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LectureDto {
     private UUID id;
     private String topic;
