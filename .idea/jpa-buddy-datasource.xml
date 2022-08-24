@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-sources>
+      <data-source id="676a6aa4-58d9-4047-9b0a-33d14b80ce54" name="ums_db" url="jdbc:postgresql://maxcloud.sytes.net:5432/ums_db" driverClass="org.postgresql.Driver" />
+    </data-sources>
+  </component>
+</project>
