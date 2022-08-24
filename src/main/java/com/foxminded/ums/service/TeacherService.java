@@ -1,11 +1,12 @@
 package com.foxminded.ums.service;
 
+import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.dto.TeacherDto;
-import com.foxminded.ums.dto.TeacherDto;
+import com.foxminded.ums.entities.Student;
 import com.foxminded.ums.entities.Teacher;
 import com.foxminded.ums.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,7 +20,9 @@ public class TeacherService {
     TeacherRepository teacherRepository;
 
     public TeacherDto findTeacher(UUID teacherUuid) {
-        return convertToDto(teacherRepository.findById(teacherUuid).get());
+        TeacherDto teacherDto = convertToDto(teacherRepository.findById(teacherUuid).get());
+        teacherDto.setHashedPassword(null);
+        return teacherDto;
     }
 
     public List<TeacherDto> findTeachers() {
@@ -28,11 +31,11 @@ public class TeacherService {
         return teachersDto;
     }
 
-    public List<TeacherDto> findTeachersPageable(int pageNumber, int pageSize) {
+    public List<TeacherDto> findTeachersPageable(Pageable pageable) {
         List<TeacherDto> teachersDto = new ArrayList<>();
-        teacherRepository.findAll(PageRequest.of(pageNumber, pageSize)).forEach(s -> teachersDto.add(convertToDto(s)));
+        teacherRepository.findAll(pageable).forEach(s -> teachersDto.add(convertToDto(s)));
+        teachersDto.forEach(s -> s.setHashedPassword(null));
         return teachersDto;
-
     }
     
     @Transactional
@@ -44,7 +47,9 @@ public class TeacherService {
     @Transactional
     public TeacherDto updateTeacher(TeacherDto teacherDto) {
         Teacher entity = convertToEntity(teacherDto);
-        return convertToDto(teacherRepository.save(entity));
+        teacherRepository.save(entity);
+
+        return convertToDto(teacherRepository.findById(teacherDto.getId()).get());
     }
 
     @Transactional

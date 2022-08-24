@@ -1,12 +1,6 @@
 package com.foxminded.ums.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.dto.TimeTableUnitDto;
-import com.foxminded.ums.json.TimeTableUnitDtoSerializerForStudent;
-import com.foxminded.ums.json.TimeTableUnitDtoSerializerForTeacher;
 import com.foxminded.ums.service.TimeTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,106 +24,38 @@ public class TimeTableRestController {
     @Autowired
     private TimeTableService timeTableService;
 
-    @RequestMapping(value = "/student/{id}", method = RequestMethod.GET, params = "day")
-    @ResponseBody
-    public ResponseEntity<Object> getDailyTimeTableForStudent(@PathVariable String id,
-                                                              @RequestParam(value = "day") String day) {
-        TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate dayDate = LocalDate.parse(day, formatter);
-
-        List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByDayForStudent(UUID.fromString(id), dayDate);
-
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(new TimeTableUnitDtoSerializerForStudent(timeTableUnitDto.getClass()));
-        mapper.registerModule(module);
-
-        String serializedJson = null;
-        try {
-            serializedJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(timeTableUnitDto);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return ResponseEntity.ok().body(serializedJson);
-    }
-
-    @RequestMapping(value = "/student/{id}", method = RequestMethod.GET,params = "month")
-    @ResponseBody
-    public ResponseEntity<Object> getMonthlyTimeTableForStudent(@PathVariable String id,
-                                              @RequestParam(value = "month") String month) {
+    @RequestMapping(value = "/student/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
+    public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForStudent(
+            @PathVariable String id,
+            @RequestParam(value = "startDay") String startDay,
+            @RequestParam(value = "endDay") String endDay) {
 
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate monthDate = LocalDate.parse(month, formatter);
+        LocalDate startDayDate = LocalDate.parse(startDay, formatter);
+        LocalDate endDayDate = LocalDate.parse(endDay, formatter);
 
-        List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByMonthForStudent(UUID.fromString(id), monthDate);
+        List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByPeriodForStudent(UUID.fromString(id),
+                startDayDate, endDayDate);
 
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(new TimeTableUnitDtoSerializerForStudent(timeTableUnitDto.getClass()));
-        mapper.registerModule(module);
-
-        String serializedJson = null;
-        try {
-            serializedJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(timeTableUnitDto);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return ResponseEntity.ok().body(serializedJson);
+        return ResponseEntity.ok().body(timeTableUnitDto);
     }
 
     @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = "day")
-    @ResponseBody
-    public ResponseEntity<Object> getDailyTimeTableForTeacher(@PathVariable String id,
-                                                              @RequestParam(value = "day") String day) {
-        TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate dayDate = LocalDate.parse(day, formatter);
-
-        List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByDayForTeacher(UUID.fromString(id), dayDate);
-
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(new TimeTableUnitDtoSerializerForTeacher(timeTableUnitDto.getClass()));
-        mapper.registerModule(module);
-
-        String serializedJson = null;
-        try {
-            serializedJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(timeTableUnitDto);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return ResponseEntity.ok().body(serializedJson);
-    }
-
-    @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET,params = "month")
-    @ResponseBody
-    public ResponseEntity<Object> getMonthyTimeTableForTeacher(@PathVariable String id,
-                                              @RequestParam(value = "month") String month) {
+    public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForTeacher(
+            @PathVariable String id,
+            @RequestParam(value = "startDay") String startDay,
+            @RequestParam(value = "endDay") String endDay) {
 
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate monthDate = LocalDate.parse(month, formatter);
+        LocalDate startDayDate = LocalDate.parse(startDay, formatter);
+        LocalDate endDayDate = LocalDate.parse(endDay, formatter);
 
-        List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByMonthForTeacher(UUID.fromString(id), monthDate);
+        List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByPeriodForTeacher(UUID.fromString(id),
+                startDayDate, endDayDate);
 
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(new TimeTableUnitDtoSerializerForStudent(timeTableUnitDto.getClass()));
-        mapper.registerModule(module);
-
-        String serializedJson = null;
-        try {
-            serializedJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(timeTableUnitDto);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return ResponseEntity.ok().body(serializedJson);
+        return ResponseEntity.ok().body(timeTableUnitDto);
     }
 
 }

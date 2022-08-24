@@ -20,8 +20,7 @@ public class LectureRestController {
     private LectureService lectureService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Object> findLecture(@PathVariable String id) {
+    public ResponseEntity<LectureDto> findLecture(@PathVariable String id) {
         UUID lectureId = UUID.fromString(id);
 
         LectureDto lectureDto = lectureService.findLecture(lectureId);

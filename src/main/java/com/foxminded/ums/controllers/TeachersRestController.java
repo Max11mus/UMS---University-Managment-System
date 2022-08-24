@@ -3,6 +3,8 @@ package com.foxminded.ums.controllers;
 import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,20 +26,14 @@ public class TeachersRestController {
     private TeacherService teacherService;
 
     @GetMapping
-    @ResponseBody
-    public ResponseEntity<Object> findTeachers(
-            @RequestParam(value = "pageNumber", required = false, defaultValue = "0") Integer pageNumber,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "5") Integer pageSize) {
+    public ResponseEntity<List<TeacherDto>> findTeachers(@PageableDefault(page = 0, size = 5) Pageable pageable) {
+        List<TeacherDto> teacherDtos = teacherService.findTeachersPageable(pageable);
 
-        List<TeacherDto> teacherDtos = teacherService.findTeachersPageable(pageNumber,pageSize);
-        teacherDtos.forEach(s -> s.setHashedPassword("pa$$word"));
-
-        return ResponseEntity.ok().body(teacherDtos);
+        return ResponseEntity.ok().body (teacherDtos);
     }
 
     @PostMapping
-    @ResponseBody
-    public ResponseEntity<Object> addTeacher(@RequestBody TeacherDto teacherDto) {
+    public ResponseEntity<TeacherDto> addTeacher(@RequestBody TeacherDto teacherDto) {
         UUID teacherId = teacherService.addTeacher(teacherDto).getId();
         TeacherDto addedTeacher = teacherService.findTeacher(teacherId);
 
@@ -47,8 +41,7 @@ public class TeachersRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Object> findTeacher(@PathVariable String id) {
+    public ResponseEntity<TeacherDto> findTeacher(@PathVariable String id) {
         UUID teacherId = UUID.fromString(id);
 
         TeacherDto teacherDto = teacherService.findTeacher(teacherId);
@@ -58,20 +51,17 @@ public class TeachersRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResponseEntity<Object> updateTeacher(@RequestBody TeacherDto teacherDto, @PathVariable String id) {
+    public ResponseEntity<TeacherDto> updateTeacher(@RequestBody TeacherDto teacherDto, @PathVariable String id) {
         UUID teacherId = UUID.fromString(id);
         teacherDto.setId(teacherId);
-        teacherService.updateTeacher(teacherDto);
 
-        TeacherDto updatedTeacher = teacherService.findTeacher(teacherId);
+        TeacherDto updatedTeacher = teacherService.updateTeacher(teacherDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(updatedTeacher);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResponseEntity<Object> deleteTeacher(@PathVariable String id) {
+    public ResponseEntity<TeacherDto> deleteTeacher(@PathVariable String id) {
         UUID teacherId = UUID.fromString(id);
         teacherService.deleteTeacher(teacherId);
 

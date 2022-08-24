@@ -5,7 +5,7 @@ import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.entities.Student;
 import com.foxminded.ums.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,20 +19,23 @@ public class StudentService {
     StudentRepository studentRepository;
 
     public StudentDto findStudent(UUID studentId) {
-        return convertToDto(studentRepository.findById(studentId).get());
+        StudentDto studentsDto = convertToDto(studentRepository.findById(studentId).get());
+        studentsDto.setHashedPassword(null);
+        return studentsDto;
     }
 
     public List<StudentDto> findStudents() {
         List<StudentDto> studentsDto = new ArrayList<>();
         studentRepository.findAll().forEach(s -> studentsDto.add(convertToDto(s)));
+        studentsDto.forEach(s -> s.setHashedPassword(null));
         return studentsDto;
     }
 
-    public List<StudentDto> findStudentsPageable(int pageNumber, int pageSize) {
+    public List<StudentDto> findStudentsPageable(Pageable pageable) {
         List<StudentDto> studentsDto = new ArrayList<>();
-        studentRepository.findAll(PageRequest.of(pageNumber, pageSize)).forEach(s -> studentsDto.add(convertToDto(s)));
+        studentRepository.findAll(pageable).forEach(s -> studentsDto.add(convertToDto(s)));
+        studentsDto.forEach(s -> s.setHashedPassword(null));
         return studentsDto;
-
     }
 
     @Transactional
@@ -44,7 +47,9 @@ public class StudentService {
     @Transactional
     public StudentDto updateStudent(StudentDto studentDto) {
         Student entity = convertToEntity(studentDto);
-        return convertToDto(studentRepository.save(entity));
+        studentRepository.save(entity);
+
+        return convertToDto(studentRepository.findById(studentDto.getId()).get());
     }
 
     @Transactional
