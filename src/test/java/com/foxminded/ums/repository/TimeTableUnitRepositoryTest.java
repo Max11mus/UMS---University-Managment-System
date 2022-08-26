@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(value = "/insert_all_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "/clear_data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class TimeTableUnitRepositoryTest {
+class ддTimeTableUnitRepositoryTest {
     @Autowired
     private TimeTableUnitRepository timeTableUnitRepository;
 
@@ -35,7 +35,6 @@ class TimeTableUnitRepositoryTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime startDateTime = LocalDateTime.parse("2022-06-05 00:00", formatter);
         LocalDateTime endDateTime = LocalDateTime.parse("2022-06-06 00:00", formatter);
-        System.out.println(startDateTime);
         String[] expectedTimeTableUnitUuids = {"9c1a0a40-b398-4c83-a571-1aaeb18e5414",
                 "639b9cbe-3654-40d6-ae7f-aaf651c85950"};
         List<UUID> listExpectedTimeTableUnitUuids = Arrays.asList(expectedTimeTableUnitUuids)

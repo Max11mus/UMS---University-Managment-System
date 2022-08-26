@@ -1,5 +1,6 @@
 package com.foxminded.ums.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxminded.ums.entities.Person;
 import com.foxminded.ums.entities.Teacher;
 
@@ -8,6 +9,7 @@ import java.util.Objects;
 import java.util.TimeZone;
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TeacherDto {
     private UUID id;
     private String name;

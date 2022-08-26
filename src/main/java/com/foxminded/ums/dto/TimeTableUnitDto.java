@@ -1,5 +1,6 @@
 package com.foxminded.ums.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxminded.ums.entities.Group;
 import com.foxminded.ums.entities.Lecture;
 import com.foxminded.ums.entities.Location;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TimeTableUnitDto {
     private UUID id;
     private Location location;

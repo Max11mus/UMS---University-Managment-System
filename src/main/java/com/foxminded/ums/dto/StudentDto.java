@@ -1,14 +1,13 @@
 package com.foxminded.ums.dto;
 
-import com.foxminded.ums.entities.Person;
-import com.foxminded.ums.entities.Student;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import javax.persistence.Column;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.TimeZone;
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentDto {
     private UUID id;
     private String name;
