@@ -29,15 +29,14 @@ public class StudentsRestController {
     public ResponseEntity<List<StudentDto>> findStudents(@PageableDefault(page = 0, size = 5) Pageable pageable) {
         List<StudentDto> studentDtos = studentService.findStudentsPageable(pageable);
 
-        return ResponseEntity.ok().body (studentDtos);
+        return ResponseEntity.ok().body(studentDtos);
     }
 
     @PostMapping
     public ResponseEntity<StudentDto> addStudent(@RequestBody StudentDto studentDto) {
-        UUID studentId = studentService.addStudent(studentDto).getId();
-        StudentDto addedStudent = studentService.findStudent(studentId);
+        StudentDto addedStudent = studentService.addStudent(studentDto);
 
-        return ResponseEntity.ok().body(addedStudent);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedStudent);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -53,11 +52,9 @@ public class StudentsRestController {
     public ResponseEntity<StudentDto> updateStudent(@RequestBody StudentDto studentDto, @PathVariable String id) {
         UUID studentId = UUID.fromString(id);
         studentDto.setId(studentId);
-        studentService.updateStudent(studentDto);
+        StudentDto updatedStudent = studentService.updateStudent(studentDto);
 
-        StudentDto updatedStudent = studentService.findStudent(studentId);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(updatedStudent);
+        return ResponseEntity.ok().body(updatedStudent);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

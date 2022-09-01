@@ -3,43 +3,47 @@ package com.foxminded.ums.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foxminded.ums.dto.LectureDto;
 import com.foxminded.ums.service.LectureService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = {LectureRestController.class})
-class LectureRestControllerTest {
+@TestPropertySource(locations = "/integration-test.properties")
+@AutoConfigureMockMvc
+@AutoConfigureDataJpa
+@Transactional
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(value = "/clear_data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+class LectureRestControllerIntegrationTest extends BaseIT{
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private LectureService lectureService;
-
     @Test
+    @Sql(value = "/insert_all_data.sql")
     void findLecture_mustReturnStatus200AndExistedLectureDtoInJsonFormat_whenGetMethod() throws Exception {
         //given
         UUID lectureId = UUID.fromString("22bfa2c0-9022-49b6-ac34-c46cffe9677e");
@@ -63,7 +67,6 @@ class LectureRestControllerTest {
                     "\"login\":\"d.cohen\"," +
                     "\"email\":\"d.cohen@gmail.com\"," +
                     "\"avatarPath\":\"\"," +
-                    "\"hashedPassword\":\"7f0485c93e4328b69b0b5f03a2b37cb73ef9838e9f3fdeb74c20474b1ea75e45\"," +
                     "\"academicDegree\":\"Master of Science \"," +
                     "\"employmentDate\":\"2021-08-04\"}," +
                 "\"subject\":{\"id\":\"2b41e5c2-76ce-46e1-895f-c5a6e588de64\"," +
@@ -73,8 +76,6 @@ class LectureRestControllerTest {
                 "}";
 
         LectureDto lectureDto = lectureDto = objectMapper.readValue(expectedJson, LectureDto.class);
-
-        when(lectureService.findLecture(lectureId)).thenReturn(lectureDto);
 
         //when
         ResultActions actualResult = mockMvc.perform(get(uriPath));
@@ -88,8 +89,5 @@ class LectureRestControllerTest {
 
         assertEquals(expectedJson, actualJson);
 
-        InOrder serviceCallsOrder = Mockito.inOrder(lectureService);
-        serviceCallsOrder.verify(lectureService).findLecture(lectureId);
-        serviceCallsOrder.verifyNoMoreInteractions();
     }
 }

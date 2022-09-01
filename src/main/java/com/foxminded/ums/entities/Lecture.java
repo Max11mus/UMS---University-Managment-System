@@ -1,5 +1,7 @@
 package com.foxminded.ums.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "lecture", schema = "ums")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Lecture {
     @Id
     @GeneratedValue

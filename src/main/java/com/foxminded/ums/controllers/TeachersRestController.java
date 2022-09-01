@@ -34,10 +34,9 @@ public class TeachersRestController {
 
     @PostMapping
     public ResponseEntity<TeacherDto> addTeacher(@RequestBody TeacherDto teacherDto) {
-        UUID teacherId = teacherService.addTeacher(teacherDto).getId();
-        TeacherDto addedTeacher = teacherService.findTeacher(teacherId);
+        TeacherDto addedTeacher = teacherService.addTeacher(teacherDto);
 
-        return ResponseEntity.ok().body(addedTeacher);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedTeacher);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -45,7 +44,6 @@ public class TeachersRestController {
         UUID teacherId = UUID.fromString(id);
 
         TeacherDto teacherDto = teacherService.findTeacher(teacherId);
-        teacherDto.setHashedPassword("pa$$word");
 
         return ResponseEntity.ok().body(teacherDto);
     }
@@ -57,7 +55,7 @@ public class TeachersRestController {
 
         TeacherDto updatedTeacher = teacherService.updateTeacher(teacherDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(updatedTeacher);
+        return ResponseEntity.ok().body(updatedTeacher);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

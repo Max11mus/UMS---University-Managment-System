@@ -41,7 +41,7 @@ public class TimeTableRestController {
         return ResponseEntity.ok().body(timeTableUnitDto);
     }
 
-    @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = "day")
+    @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForTeacher(
             @PathVariable String id,
             @RequestParam(value = "startDay") String startDay,

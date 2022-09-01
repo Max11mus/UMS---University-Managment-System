@@ -1,4 +1,3 @@
-
 --- Groups
 INSERT INTO ums.group_table
 (group_id, group_name )

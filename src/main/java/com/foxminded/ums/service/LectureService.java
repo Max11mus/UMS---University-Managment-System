@@ -16,7 +16,9 @@ public class LectureService {
     LectureRepository lectureRepository;
 
     public LectureDto findLecture(UUID id){
-        return convertToDto(lectureRepository.findById(id).get());
+        LectureDto lectureDto = convertToDto(lectureRepository.findById(id).get());
+        lectureDto.getTeacher().setHashedPassword(null);
+        return lectureDto;
     }
 
     private LectureDto convertToDto(Lecture lecture) {
