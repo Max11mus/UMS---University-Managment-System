@@ -1,6 +1,8 @@
 package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.TeacherDto;
+import com.foxminded.ums.exeptions.TeacherIlegalUuidException;
+import com.foxminded.ums.exeptions.TeacherNotFoundException;
 import com.foxminded.ums.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @RestController
@@ -41,9 +44,19 @@ public class TeachersRestController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<TeacherDto> findTeacher(@PathVariable String id) {
-        UUID teacherId = UUID.fromString(id);
+        UUID teacherId = null;
+        try {
+            teacherId = UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            throw new TeacherIlegalUuidException(id + " isn't correct Teacher UUID. See RFC 4122 - 4.1. Format", e);
+        }
 
-        TeacherDto teacherDto = teacherService.findTeacher(teacherId);
+        TeacherDto teacherDto = null;
+        try {
+            teacherDto = teacherService.findTeacher(teacherId);
+        } catch (NoSuchElementException e) {
+            throw new TeacherNotFoundException("Teacher with ID: " + id + " not found", e);
+        }
 
         return ResponseEntity.ok().body(teacherDto);
     }
