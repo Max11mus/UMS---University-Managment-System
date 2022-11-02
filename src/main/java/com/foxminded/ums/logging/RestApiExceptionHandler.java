@@ -1,8 +1,9 @@
-package com.foxminded.ums.controllers;
+package com.foxminded.ums.logging;
 
 import com.foxminded.ums.exeptions.ErrorResponce;
 import com.foxminded.ums.exeptions.LectureIlegalUuidException;
 import com.foxminded.ums.exeptions.LectureNotFoundException;
+import com.foxminded.ums.exeptions.ServerErrorException;
 import com.foxminded.ums.exeptions.StudentIlegalUuidException;
 import com.foxminded.ums.exeptions.StudentNotFoundException;
 import com.foxminded.ums.exeptions.TeacherIlegalUuidException;
@@ -44,6 +45,15 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         LOGGER.error(e.getMessage(), e.getCause());
 
         return new ResponseEntity<ErrorResponce>(errorResponce, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = {ServerErrorException.class})
+    public ResponseEntity<ErrorResponce> handleServerError(RuntimeException e) {
+        ErrorResponce errorResponce = new ErrorResponce(e.getMessage());
+
+        LOGGER.error(e.getMessage(), e.getCause());
+
+        return new ResponseEntity<ErrorResponce>(errorResponce, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
