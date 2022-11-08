@@ -1,12 +1,10 @@
 package com.foxminded.ums.exeptions;
 
-public class TeacherNotFoundException extends RuntimeException {
-    public TeacherNotFoundException(String message) {
-        super(message);
-    }
+import java.util.UUID;
 
-    public TeacherNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+public class TeacherNotFoundException extends RuntimeException {
+    public TeacherNotFoundException(UUID uuid, Throwable cause) {
+        super("Teacher with ID: " + uuid + " not found", cause);
     }
 
 }

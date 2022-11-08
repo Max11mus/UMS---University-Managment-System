@@ -1,25 +1,23 @@
 package com.foxminded.ums.exeptions;
 
+import org.springframework.http.HttpStatus;
+
 public class ErrorResponce {
-    private int statuscode;
+    private HttpStatus httpStatusCode;
     private String message;
     private String description;
-
-    public ErrorResponce() {
-    }
-
-    public ErrorResponce(int statuscode, String message, String description) {
-        this.statuscode = statuscode;
+    public ErrorResponce(HttpStatus httpStatusCode, String message, String description) {
+        this.httpStatusCode = httpStatusCode;
         this.message = message;
         this.description = description;
     }
 
-    public int getStatuscode() {
-        return statuscode;
+    public HttpStatus getHttpStatusCode() {
+        return httpStatusCode;
     }
 
-    public void setStatuscode(int statuscode) {
-        this.statuscode = statuscode;
+    public void setHttpStatusCode(HttpStatus httpStatusCode) {
+        this.httpStatusCode = httpStatusCode;
     }
 
     public String getMessage() {

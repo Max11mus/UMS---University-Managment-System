@@ -1,12 +1,10 @@
 package com.foxminded.ums.exeptions;
 
-public class LectureNotFoundException extends RuntimeException {
-    public LectureNotFoundException(String message) {
-        super(message);
-    }
+import java.util.UUID;
 
-    public LectureNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+public class LectureNotFoundException extends RuntimeException {
+    public LectureNotFoundException(UUID uuid, Throwable cause) {
+        super("Lecture with ID: " + uuid + " not found", cause);
     }
 
 }

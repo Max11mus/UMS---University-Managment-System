@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class StudentNotFoundException extends RuntimeException {
     public StudentNotFoundException(UUID uuid, Throwable cause) {
-        super(uuid + " isn't correct Lecture UUID. See RFC 4122 - 4.1. Format", cause);
+        super("Student with ID: " + uuid + " not found", cause);
     }
 
 }
