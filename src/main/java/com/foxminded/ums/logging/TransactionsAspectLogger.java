@@ -44,7 +44,9 @@ public class TransactionsAspectLogger {
             LOGGER.info(e.getMessage(), e);
             LOGGER.info("Unroll Transaction");
             if (e instanceof NoSuchElementException) {
-                throw e;
+
+
+
             } else {
                 throw new ServerErrorException(e.getMessage(), e);
             }

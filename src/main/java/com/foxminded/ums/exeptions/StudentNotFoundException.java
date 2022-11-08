@@ -1,12 +1,10 @@
 package com.foxminded.ums.exeptions;
 
-public class StudentNotFoundException extends RuntimeException {
-    public StudentNotFoundException(String message) {
-        super(message);
-    }
+import java.util.UUID;
 
-    public StudentNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+public class StudentNotFoundException extends RuntimeException {
+    public StudentNotFoundException(UUID uuid, Throwable cause) {
+        super(uuid + " isn't correct Lecture UUID. See RFC 4122 - 4.1. Format", cause);
     }
 
 }

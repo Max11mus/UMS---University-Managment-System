@@ -1,9 +1,6 @@
 package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.TimeTableUnitDto;
-import com.foxminded.ums.exeptions.TeacherIlegalUuidException;
-import com.foxminded.ums.exeptions.TimeTableIlegalTeacherUuidException;
-import com.foxminded.ums.exeptions.TimeTableUnitIlegalStudentUuidException;
 import com.foxminded.ums.service.TimeTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -38,15 +34,8 @@ public class TimeTableRestController {
         LocalDate startDayDate = LocalDate.parse(startDay, formatter);
         LocalDate endDayDate = LocalDate.parse(endDay, formatter);
 
-        List<TimeTableUnitDto> timeTableUnitDto = null;
-
-        try {
-            timeTableUnitDto = timeTableService.findByPeriodForStudent(UUID.fromString(id),
+        List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByPeriodForStudent(UUID.fromString(id),
                     startDayDate, endDayDate);
-        } catch (IllegalArgumentException e) {
-            throw new TimeTableUnitIlegalStudentUuidException(id + " isn't correct Strudent UUID." +
-                    " See RFC 4122 - 4.1. Format", e);
-        }
 
         return ResponseEntity.ok().body(timeTableUnitDto);
     }
@@ -63,13 +52,9 @@ public class TimeTableRestController {
         LocalDate endDayDate = LocalDate.parse(endDay, formatter);
 
         List<TimeTableUnitDto> timeTableUnitDto = null;
-        try {
-            timeTableUnitDto = timeTableService.findByPeriodForTeacher(UUID.fromString(id),
-                    startDayDate, endDayDate);
-        } catch (IllegalArgumentException e) {
-            throw new TimeTableIlegalTeacherUuidException(id + " isn't correct Teacher UUID." +
-                    " See RFC 4122 - 4.1. Format", e);
-        }
+
+        timeTableUnitDto = timeTableService.findByPeriodForTeacher(UUID.fromString(id),
+                startDayDate, endDayDate);
 
         return ResponseEntity.ok().body(timeTableUnitDto);
     }
