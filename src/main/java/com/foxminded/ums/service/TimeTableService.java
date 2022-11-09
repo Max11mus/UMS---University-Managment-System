@@ -30,7 +30,16 @@ public class TimeTableService {
             t.getLecture().setDescription(null);
             t.getLecture().setTopic(null);
             t.getLecture().setSubject(null);
-            t.setGroups(null);
+            t.getLecture().getTeacher().setHashedPassword(null);
+            t.getLecture().getTeacher().setEmploymentDate(null);
+            t.getLecture().getTeacher().setAcademicDegree(null);
+            t.getLecture().getTeacher().setEmploymentDate(null);
+            t.getLecture().getTeacher().setAvatarPath(null);
+            t.getLecture().getTeacher().setLogin(null);
+            t.getLecture().getTeacher().setBirthDate(null);
+            t.getLecture().getTeacher().setEmail(null);
+            t.getLecture().getTeacher().setTimeZone(null);
+
         }
 
         return timeTableUnitDtos;
@@ -46,7 +55,10 @@ public class TimeTableService {
 
         for (TimeTableUnitDto t : timeTableUnitDtos) {
             t.setGroups(null);
-            t.setLecture(null);
+            t.getLecture().setDescription(null);
+            t.getLecture().setTopic(null);
+            t.getLecture().setSubject(null);
+            t.getLecture().setTeacher(null);
         }
 
         return timeTableUnitDtos;

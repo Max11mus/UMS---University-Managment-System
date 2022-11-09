@@ -49,7 +49,10 @@ public class StudentService {
         Student entity = convertToEntity(studentDto);
         studentRepository.save(entity);
 
-        return convertToDto(studentRepository.findById(studentDto.getId()).get());
+        StudentDto dto = convertToDto(studentRepository.findById(studentDto.getId()).get());
+        dto.setHashedPassword(null);
+
+        return dto;
     }
 
     @Transactional

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -36,12 +35,12 @@ public class TimeTableRestController {
         LocalDate endDayDate = LocalDate.parse(endDay, formatter);
 
         List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByPeriodForStudent(UUID.fromString(id),
-                startDayDate, endDayDate);
+                    startDayDate, endDayDate);
 
         return ResponseEntity.ok().body(timeTableUnitDto);
     }
 
-    @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = "day")
+    @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForTeacher(
             @PathVariable String id,
             @RequestParam(value = "startDay") String startDay,
@@ -52,7 +51,9 @@ public class TimeTableRestController {
         LocalDate startDayDate = LocalDate.parse(startDay, formatter);
         LocalDate endDayDate = LocalDate.parse(endDay, formatter);
 
-        List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByPeriodForTeacher(UUID.fromString(id),
+        List<TimeTableUnitDto> timeTableUnitDto = null;
+
+        timeTableUnitDto = timeTableService.findByPeriodForTeacher(UUID.fromString(id),
                 startDayDate, endDayDate);
 
         return ResponseEntity.ok().body(timeTableUnitDto);
