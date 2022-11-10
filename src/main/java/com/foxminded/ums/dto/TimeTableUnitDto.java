@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxminded.ums.entities.Group;
 import com.foxminded.ums.entities.Lecture;
 import com.foxminded.ums.entities.Location;
-import com.foxminded.ums.entities.TimeTableUnit;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -85,7 +85,7 @@ public class TimeTableUnitDto {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hashCode(id);
     }
 
 }

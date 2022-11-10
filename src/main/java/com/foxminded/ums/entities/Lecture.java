@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
@@ -21,19 +20,16 @@ public class Lecture {
     @Column(name = "lecture_id")
     private UUID id;
 
-    @NotNull
     @Column(name = "topic")
     private String topic;
 
     @Column(name = "description")
     private String description;
 
-    @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "subject_id")
     private Subject subject;

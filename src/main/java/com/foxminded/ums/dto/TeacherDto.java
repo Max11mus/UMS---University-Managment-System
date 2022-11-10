@@ -1,9 +1,11 @@
 package com.foxminded.ums.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.foxminded.ums.entities.Person;
-import com.foxminded.ums.entities.Teacher;
+import com.foxminded.ums.validation.OlderThanSixteen;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -12,15 +14,39 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TeacherDto {
     private UUID id;
+
+    @NotNull
+    @NotBlank
     private String name;
+
+    @NotNull
+    @NotBlank
     private String surname;
+
+    @NotNull
+    @OlderThanSixteen
     private LocalDate birthDate;
+
     private TimeZone timeZone;
+
+    @NotNull
+    @NotBlank
     private String login;
+
+    @NotNull
+    @Email
     private String email;
+
     private String avatarPath;
+
+    @NotNull
     private String hashedPassword;
+
+    @NotNull
+    @NotBlank
     private String academicDegree;
+
+    @NotNull
     private LocalDate employmentDate;
 
     public UUID getId() {
@@ -131,7 +157,7 @@ public class TeacherDto {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hashCode(id);
     }
 
 }

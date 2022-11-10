@@ -2,14 +2,17 @@ package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.TimeTableUnitDto;
 import com.foxminded.ums.service.TimeTableService;
+import com.foxminded.ums.validation.ValidUUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 @RestController
+@Validated
 @RequestMapping(value = "/timetable")
 public class TimeTableRestController {
 
@@ -25,7 +29,7 @@ public class TimeTableRestController {
 
     @RequestMapping(value = "/student/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForStudent(
-            @PathVariable String id,
+            @Valid @PathVariable("id") @ValidUUID String id,
             @RequestParam(value = "startDay") String startDay,
             @RequestParam(value = "endDay") String endDay) {
 
@@ -42,7 +46,7 @@ public class TimeTableRestController {
 
     @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForTeacher(
-            @PathVariable String id,
+            @Valid @PathVariable("id") @ValidUUID String id,
             @RequestParam(value = "startDay") String startDay,
             @RequestParam(value = "endDay") String endDay) {
 

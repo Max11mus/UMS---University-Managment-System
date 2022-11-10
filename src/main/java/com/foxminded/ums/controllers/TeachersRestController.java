@@ -2,11 +2,13 @@ package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.service.TeacherService;
+import com.foxminded.ums.validation.ValidUUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Validated
 @RequestMapping(value = "/teachers")
 public class TeachersRestController {
 
@@ -33,14 +37,14 @@ public class TeachersRestController {
     }
 
     @PostMapping
-    public ResponseEntity<TeacherDto> addTeacher(@RequestBody TeacherDto teacherDto) {
+    public ResponseEntity<TeacherDto> addTeacher(@Valid @RequestBody TeacherDto teacherDto) {
         TeacherDto addedTeacher = teacherService.addTeacher(teacherDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(addedTeacher);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<TeacherDto> findTeacher(@PathVariable String id) {
+    public ResponseEntity<TeacherDto> findTeacher(@Valid @PathVariable("id") @ValidUUID String id) {
         UUID teacherId = UUID.fromString(id);
 
         TeacherDto teacherDto = teacherService.findTeacher(teacherId);
@@ -49,7 +53,8 @@ public class TeachersRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<TeacherDto> updateTeacher(@RequestBody TeacherDto teacherDto, @PathVariable String id) {
+    public ResponseEntity<TeacherDto> updateTeacher(@Valid @RequestBody TeacherDto teacherDto,
+                                                    @Valid @PathVariable("id") @ValidUUID String id) {
         UUID teacherId = UUID.fromString(id);
         teacherDto.setId(teacherId);
 
@@ -59,7 +64,7 @@ public class TeachersRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<TeacherDto> deleteTeacher(@PathVariable String id) {
+    public ResponseEntity<TeacherDto> deleteTeacher(@Valid @PathVariable("id") @ValidUUID String id) {
         UUID teacherId = UUID.fromString(id);
         teacherService.deleteTeacher(teacherId);
 

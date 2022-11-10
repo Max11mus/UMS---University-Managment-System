@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,11 +16,8 @@ public class Group {
     @Id
     @GeneratedValue
     @Column(name = "group_id")
-
     private UUID id;
 
-    @NotNull
-    @NotEmpty
     @Column(name = "group_name")
     private String name;
 

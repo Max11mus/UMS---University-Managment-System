@@ -4,14 +4,24 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxminded.ums.entities.Subject;
 import com.foxminded.ums.entities.Teacher;
 
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LectureDto {
     private UUID id;
+
+    @NotNull
     private String topic;
+
+    @NotNull
     private String description;
+
+    @NotNull
     private Teacher teacher;
+
+    @NotNull
     private Subject subject;
 
     public UUID getId() {
@@ -70,6 +80,6 @@ public class LectureDto {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hashCode(id);
     }
 }

@@ -3,6 +3,8 @@ package com.foxminded.ums.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.service.TeacherService;
+import com.foxminded.ums.validation.ClockBean;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -10,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +46,16 @@ class TeachersRestControllerTest {
 
     @MockBean
     private TeacherService teacherService;
+
+    @SpyBean
+    private ClockBean clockBean;
+
+    @BeforeEach
+    void setFixedClockForTests() {
+        String fixedTestInstantTime = "2022-11-11T11:11:11Z";
+        String fixedTestZone = "Etc/UTC";
+        clockBean.setClock(Clock.fixed(Instant.parse(fixedTestInstantTime), ZoneId.of(fixedTestZone)));
+    }
 
     @Test
     void findTeachers_mustReturnStatus200AndExistedTeacherDtosInJsonFormat_whenGetMethod() throws Exception {
@@ -99,6 +115,7 @@ class TeachersRestControllerTest {
                 "\"timeZone\":\"GMT-05:00\"," +
                 "\"login\":\"b.stafford\"," +
                 "\"email\":\"s.stafford@gmail.com\"," +
+                "\"hashedPassword\":\"\"," +
                 "\"avatarPath\":\"\"," +
                 "\"academicDegree\":\"Master of Science \"," +
                 "\"employmentDate\":\"2021-08-04\"" +
@@ -112,6 +129,7 @@ class TeachersRestControllerTest {
                 "\"login\":\"b.stafford\"," +
                 "\"email\":\"s.stafford@gmail.com\"," +
                 "\"avatarPath\":\"\"," +
+                "\"hashedPassword\":\"\"," +
                 "\"academicDegree\":\"Master of Science \"," +
                 "\"employmentDate\":\"2021-08-04\"" +
                 "}";
@@ -155,6 +173,7 @@ class TeachersRestControllerTest {
                 "\"login\":\"b.stafford\"," +
                 "\"email\":\"s.stafford@gmail.com\"," +
                 "\"avatarPath\":\"\"," +
+                "\"hashedPassword\":\"\"," +
                 "\"academicDegree\":\"Master of Science \"," +
                 "\"employmentDate\":\"2021-08-04\"" +
                 "}";
@@ -195,6 +214,7 @@ class TeachersRestControllerTest {
                 "\"login\":\"b.stafford\"," +
                 "\"email\":\"s.stafford@gmail.com\"," +
                 "\"avatarPath\":\"\"," +
+                "\"hashedPassword\":\"\"," +
                 "\"academicDegree\":\"Master of Science \"," +
                 "\"employmentDate\":\"2021-08-04\"" +
                 "}";
@@ -207,6 +227,7 @@ class TeachersRestControllerTest {
                 "\"login\":\"b.stafford\"," +
                 "\"email\":\"s.stafford@gmail.com\"," +
                 "\"avatarPath\":\"\"," +
+                "\"hashedPassword\":\"\"," +
                 "\"academicDegree\":\"Master of Science \"," +
                 "\"employmentDate\":\"2021-08-04\"" +
                 "}";
