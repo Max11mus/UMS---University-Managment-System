@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
@@ -18,6 +19,7 @@ public class Location {
     @Column(name = "location_id")
     private UUID id;
 
+    @NotNull
     @Column(name = "address")
     private String address;
 
