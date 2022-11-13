@@ -34,7 +34,7 @@ class ValidUuidValidatorTest {
     }
 
     @Test
-    void isValid_mustReturnTrue_ifCorrectUuid(){ //age = fixedTestInstantTime.Year - birthLocalDate.Year
+    void isValid_mustReturnTrue_ifCorrectUuid(){
         //given
         String correctUuid = "6c8a1efe-6367-11ed-81ce-0242ac120002";
 
