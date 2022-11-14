@@ -30,8 +30,8 @@ class OlderThanSixteenValidatorTest {
 
     @BeforeEach
     void setFixedClockForTests() {
-        String fixedTestInstantTime = "2022-11-11T11:11:11Z";
-        String fixedTestZone = "Etc/UTC";
+        final String fixedTestInstantTime = "2022-11-11T11:11:11Z";
+        final String fixedTestZone = "Etc/UTC";
         final Clock clock = Clock.fixed(Instant.parse(fixedTestInstantTime), ZoneId.of(fixedTestZone));
         clockBean.setClock(clock);
     }
