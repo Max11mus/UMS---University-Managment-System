@@ -1,0 +1,587 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080/
+    description: Generated server url
+paths:
+  /teachers/{id}:
+    get:
+      tags:
+        - teachers-rest-controller
+      operationId: findTeacher
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TeacherDto'
+    put:
+      tags:
+        - teachers-rest-controller
+      operationId: updateTeacher
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TeacherDto'
+    delete:
+      tags:
+        - teachers-rest-controller
+      operationId: deleteTeacher
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TeacherDto'
+  /students/{id}:
+    get:
+      tags:
+        - students-rest-controller
+      operationId: findStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StudentDto'
+    put:
+      tags:
+        - students-rest-controller
+      operationId: updateStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StudentDto'
+    delete:
+      tags:
+        - students-rest-controller
+      operationId: deleteStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StudentDto'
+  /teachers:
+    get:
+      tags:
+        - teachers-rest-controller
+      operationId: findTeachers
+      parameters:
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeacherDto'
+    post:
+      tags:
+        - teachers-rest-controller
+      operationId: addTeacher
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TeacherDto'
+  /students:
+    get:
+      tags:
+        - students-rest-controller
+      operationId: findStudents
+      parameters:
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentDto'
+    post:
+      tags:
+        - students-rest-controller
+      operationId: addStudent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StudentDto'
+  /timetable/teacher/{id}:
+    get:
+      tags:
+        - time-table-rest-controller
+      operationId: getTimeTableForTeacher
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: startDay
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: endDay
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeTableUnitDto'
+  /timetable/student/{id}:
+    get:
+      tags:
+        - time-table-rest-controller
+      operationId: getTimeTableForStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: startDay
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: endDay
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeTableUnitDto'
+  /lectures/{id}:
+    get:
+      tags:
+        - lecture-rest-controller
+      operationId: findLecture
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LectureDto'
+components:
+  schemas:
+    TeacherDto:
+      required:
+        - academicDegree
+        - birthDate
+        - email
+        - employmentDate
+        - hashedPassword
+        - login
+        - name
+        - surname
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          maxLength: 20
+          minLength: 0
+          type: string
+        surname:
+          maxLength: 20
+          minLength: 0
+          type: string
+        birthDate:
+          type: string
+          format: date
+        timeZone:
+          type: object
+          properties:
+            displayName:
+              type: string
+            id:
+              type: string
+            dstsavings:
+              type: integer
+              format: int32
+            rawOffset:
+              type: integer
+              format: int32
+        login:
+          maxLength: 255
+          minLength: 0
+          type: string
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+        avatarPath:
+          maxLength: 1024
+          minLength: 0
+          type: string
+        hashedPassword:
+          maxLength: 255
+          minLength: 0
+          type: string
+        academicDegree:
+          maxLength: 255
+          minLength: 0
+          type: string
+        employmentDate:
+          type: string
+          format: date
+    StudentDto:
+      required:
+        - birthDate
+        - email
+        - enrollDate
+        - hashedPassword
+        - login
+        - name
+        - surname
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          maxLength: 20
+          minLength: 0
+          type: string
+        surname:
+          maxLength: 20
+          minLength: 0
+          type: string
+        birthDate:
+          type: string
+          format: date
+        timeZone:
+          type: object
+          properties:
+            displayName:
+              type: string
+            id:
+              type: string
+            dstsavings:
+              type: integer
+              format: int32
+            rawOffset:
+              type: integer
+              format: int32
+        login:
+          maxLength: 255
+          minLength: 0
+          type: string
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+        avatarPath:
+          maxLength: 1024
+          minLength: 0
+          type: string
+        hashedPassword:
+          maxLength: 255
+          minLength: 0
+          type: string
+        dropoutDate:
+          type: string
+          format: date
+        enrollDate:
+          type: string
+          format: date
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        students:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+    Lecture:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        topic:
+          type: string
+        description:
+          type: string
+        teacher:
+          $ref: '#/components/schemas/Teacher'
+        subject:
+          $ref: '#/components/schemas/Subject'
+    Location:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        address:
+          type: string
+    Student:
+      required:
+        - enrollDate
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        surname:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        timeZone:
+          type: object
+          properties:
+            displayName:
+              type: string
+            id:
+              type: string
+            dstsavings:
+              type: integer
+              format: int32
+            rawOffset:
+              type: integer
+              format: int32
+        login:
+          type: string
+        email:
+          type: string
+        avatarPath:
+          type: string
+        hashedPassword:
+          type: string
+        enrollDate:
+          type: string
+          format: date
+        dropoutDate:
+          type: string
+          format: date
+    Subject:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+    Teacher:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        surname:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        timeZone:
+          type: object
+          properties:
+            displayName:
+              type: string
+            id:
+              type: string
+            dstsavings:
+              type: integer
+              format: int32
+            rawOffset:
+              type: integer
+              format: int32
+        login:
+          type: string
+        email:
+          type: string
+        avatarPath:
+          type: string
+        hashedPassword:
+          type: string
+        academicDegree:
+          type: string
+        employmentDate:
+          type: string
+          format: date
+    TimeTableUnitDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        location:
+          $ref: '#/components/schemas/Location'
+        lecture:
+          $ref: '#/components/schemas/Lecture'
+        groups:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        begin:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+    Pageable:
+      type: object
+      properties:
+        page:
+          minimum: 0
+          type: integer
+          format: int32
+        size:
+          minimum: 1
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            type: string
+    LectureDto:
+      required:
+        - description
+        - subject
+        - teacher
+        - topic
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        topic:
+          maxLength: 255
+          minLength: 0
+          type: string
+        description:
+          maxLength: 1024
+          minLength: 0
+          type: string
+        teacher:
+          $ref: '#/components/schemas/Teacher'
+        subject:
+          $ref: '#/components/schemas/Subject'
