@@ -2,7 +2,7 @@ package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.service.StudentService;
-import com.foxminded.ums.validation.ValidUUID;
+import com.foxminded.ums.validation.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @Validated
@@ -44,8 +43,8 @@ public class StudentsRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<StudentDto> findStudent(@Valid @PathVariable("id") @ValidUUID String id) {
-        UUID studentId = UUID.fromString(id);
+    public ResponseEntity<StudentDto> findStudent(@Valid @PathVariable("id") @UUID String id) {
+        java.util.UUID studentId = java.util.UUID.fromString(id);
 
         StudentDto studentDto = studentService.findStudent(studentId);
 
@@ -54,8 +53,8 @@ public class StudentsRestController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<StudentDto> updateStudent(@Valid @RequestBody StudentDto studentDto,
-                                                    @Valid @PathVariable("id") @ValidUUID String id) {
-        UUID studentId = UUID.fromString(id);
+                                                    @Valid @PathVariable("id") @UUID String id) {
+        java.util.UUID studentId = java.util.UUID.fromString(id);
         studentDto.setId(studentId);
         StudentDto updatedStudent = studentService.updateStudent(studentDto);
 
@@ -63,8 +62,8 @@ public class StudentsRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<StudentDto> deleteStudent(@Valid @PathVariable("id") @ValidUUID String id) {
-        UUID studentId = UUID.fromString(id);
+    public ResponseEntity<StudentDto> deleteStudent(@Valid @PathVariable("id") @UUID String id) {
+        java.util.UUID studentId = java.util.UUID.fromString(id);
         studentService.deleteStudent(studentId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

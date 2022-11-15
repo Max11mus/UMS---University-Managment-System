@@ -11,9 +11,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({FIELD, METHOD, PARAMETER, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = ValidUUIDValidator.class)
+@Constraint(validatedBy = UUIDValidator.class)
 @Documented
-public @interface ValidUUID {
+public @interface UUID {
     String message() default "${validatedValue}  isn't correct " +
             " UUID. See RFC 4122 - 4.1. Format";
 

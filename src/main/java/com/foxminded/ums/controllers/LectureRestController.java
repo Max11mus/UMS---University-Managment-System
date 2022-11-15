@@ -2,7 +2,7 @@ package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.LectureDto;
 import com.foxminded.ums.service.LectureService;
-import com.foxminded.ums.validation.ValidUUID;
+import com.foxminded.ums.validation.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.UUID;
 
 @RestController
 @Validated
@@ -23,8 +22,8 @@ public class LectureRestController {
     private LectureService lectureService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<LectureDto> findLecture(@Valid @PathVariable("id") @ValidUUID String id ) {
-        UUID lectureId = UUID.fromString(id);
+    public ResponseEntity<LectureDto> findLecture(@Valid @PathVariable("id") @UUID String id ) {
+        java.util.UUID lectureId = java.util.UUID.fromString(id);
 
         LectureDto lectureDto = lectureService.findLecture(lectureId);
 

@@ -5,6 +5,7 @@ import com.foxminded.ums.entities.Subject;
 import com.foxminded.ums.entities.Teacher;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,10 +13,10 @@ import java.util.UUID;
 public class LectureDto {
     private UUID id;
 
-    @NotNull
+    @NotNull @Size(max=255)
     private String topic;
 
-    @NotNull
+    @NotNull @Size(max=1024)
     private String description;
 
     @NotNull

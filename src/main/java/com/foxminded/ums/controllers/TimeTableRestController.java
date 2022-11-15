@@ -2,7 +2,7 @@ package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.TimeTableUnitDto;
 import com.foxminded.ums.service.TimeTableService;
-import com.foxminded.ums.validation.ValidUUID;
+import com.foxminded.ums.validation.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.UUID;
 
 @RestController
 @Validated
@@ -29,7 +28,7 @@ public class TimeTableRestController {
 
     @RequestMapping(value = "/student/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForStudent(
-            @Valid @PathVariable("id") @ValidUUID String id,
+            @Valid @PathVariable("id") @UUID String id,
             @RequestParam(value = "startDay") String startDay,
             @RequestParam(value = "endDay") String endDay) {
 
@@ -38,7 +37,7 @@ public class TimeTableRestController {
         LocalDate startDayDate = LocalDate.parse(startDay, formatter);
         LocalDate endDayDate = LocalDate.parse(endDay, formatter);
 
-        List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByPeriodForStudent(UUID.fromString(id),
+        List<TimeTableUnitDto> timeTableUnitDto = timeTableService.findByPeriodForStudent(java.util.UUID.fromString(id),
                     startDayDate, endDayDate);
 
         return ResponseEntity.ok().body(timeTableUnitDto);
@@ -46,7 +45,7 @@ public class TimeTableRestController {
 
     @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForTeacher(
-            @Valid @PathVariable("id") @ValidUUID String id,
+            @Valid @PathVariable("id") @UUID String id,
             @RequestParam(value = "startDay") String startDay,
             @RequestParam(value = "endDay") String endDay) {
 
@@ -57,7 +56,7 @@ public class TimeTableRestController {
 
         List<TimeTableUnitDto> timeTableUnitDto = null;
 
-        timeTableUnitDto = timeTableService.findByPeriodForTeacher(UUID.fromString(id),
+        timeTableUnitDto = timeTableService.findByPeriodForTeacher(java.util.UUID.fromString(id),
                 startDayDate, endDayDate);
 
         return ResponseEntity.ok().body(timeTableUnitDto);

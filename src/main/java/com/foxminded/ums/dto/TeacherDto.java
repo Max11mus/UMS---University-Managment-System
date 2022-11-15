@@ -6,6 +6,7 @@ import com.foxminded.ums.validation.OlderThanSixteen;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -15,12 +16,10 @@ import java.util.UUID;
 public class TeacherDto {
     private UUID id;
 
-    @NotNull
-    @NotBlank
+    @NotNull @NotBlank @Size(max=20)
     private String name;
 
-    @NotNull
-    @NotBlank
+    @NotNull @NotBlank @Size(max=20)
     private String surname;
 
     @NotNull
@@ -29,21 +28,19 @@ public class TeacherDto {
 
     private TimeZone timeZone;
 
-    @NotNull
-    @NotBlank
+    @NotNull @NotBlank @Size(max=255)
     private String login;
 
-    @NotNull
-    @Email
+    @NotNull @NotBlank @Size(max=255)
     private String email;
 
+    @Size(max=1024)
     private String avatarPath;
 
-    @NotNull
+    @NotNull @Size(max=255)
     private String hashedPassword;
 
-    @NotNull
-    @NotBlank
+    @NotNull @NotBlank @Size(max=255)
     private String academicDegree;
 
     @NotNull

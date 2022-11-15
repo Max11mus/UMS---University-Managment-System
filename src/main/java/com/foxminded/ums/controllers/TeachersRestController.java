@@ -2,7 +2,7 @@ package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.service.TeacherService;
-import com.foxminded.ums.validation.ValidUUID;
+import com.foxminded.ums.validation.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @Validated
@@ -44,8 +43,8 @@ public class TeachersRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<TeacherDto> findTeacher(@Valid @PathVariable("id") @ValidUUID String id) {
-        UUID teacherId = UUID.fromString(id);
+    public ResponseEntity<TeacherDto> findTeacher(@Valid @PathVariable("id") @UUID String id) {
+        java.util.UUID teacherId = java.util.UUID.fromString(id);
 
         TeacherDto teacherDto = teacherService.findTeacher(teacherId);
 
@@ -54,8 +53,8 @@ public class TeachersRestController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<TeacherDto> updateTeacher(@Valid @RequestBody TeacherDto teacherDto,
-                                                    @Valid @PathVariable("id") @ValidUUID String id) {
-        UUID teacherId = UUID.fromString(id);
+                                                    @Valid @PathVariable("id") @UUID String id) {
+        java.util.UUID teacherId = java.util.UUID.fromString(id);
         teacherDto.setId(teacherId);
 
         TeacherDto updatedTeacher = teacherService.updateTeacher(teacherDto);
@@ -64,8 +63,8 @@ public class TeachersRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<TeacherDto> deleteTeacher(@Valid @PathVariable("id") @ValidUUID String id) {
-        UUID teacherId = UUID.fromString(id);
+    public ResponseEntity<TeacherDto> deleteTeacher(@Valid @PathVariable("id") @UUID String id) {
+        java.util.UUID teacherId = java.util.UUID.fromString(id);
         teacherService.deleteTeacher(teacherId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);

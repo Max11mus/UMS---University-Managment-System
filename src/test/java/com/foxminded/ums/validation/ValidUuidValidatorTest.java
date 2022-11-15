@@ -16,7 +16,7 @@ class ValidUuidValidatorTest {
     ConstraintValidatorContext constraintValidatorContext;
 
     @Autowired
-    ValidUUIDValidator validUUIDValidator;
+    UUIDValidator UUIDValidator;
 
     @SpyBean
     private ClockBean clockBean;
@@ -27,7 +27,7 @@ class ValidUuidValidatorTest {
         String incorrectUuid = "QQQQ-8888-SSSS-9999-OOOO";
 
         //when
-        boolean result = validUUIDValidator.isValid(incorrectUuid, constraintValidatorContext);
+        boolean result = UUIDValidator.isValid(incorrectUuid, constraintValidatorContext);
 
         //then
         Assertions.assertFalse(result);
@@ -39,7 +39,7 @@ class ValidUuidValidatorTest {
         String correctUuid = "6c8a1efe-6367-11ed-81ce-0242ac120002";
 
         //when
-        boolean result = validUUIDValidator.isValid(correctUuid, constraintValidatorContext);
+        boolean result = UUIDValidator.isValid(correctUuid, constraintValidatorContext);
 
         //then
         Assertions.assertTrue(result);
