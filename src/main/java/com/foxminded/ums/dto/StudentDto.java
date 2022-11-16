@@ -1,7 +1,12 @@
 package com.foxminded.ums.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.foxminded.ums.validation.OlderThanSixteen;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -10,17 +15,35 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentDto {
     private UUID id;
-    private String name;
-    private String surname;
-    private LocalDate birthDate;
-    private TimeZone timeZone;
-    private String login;
-    private String email;
-    private String avatarPath;
-    private String hashedPassword;
-    private LocalDate dropoutDate;
-    private LocalDate enrollDate;
 
+    @NotNull @NotBlank @Size(max=20)
+    private String name;
+
+    @NotNull @NotBlank @Size(max=20)
+    private String surname;
+
+    @NotNull
+    @OlderThanSixteen
+    private LocalDate birthDate;
+
+    private TimeZone timeZone;
+
+    @NotNull @NotBlank @Size(max=255)
+    private String login;
+
+    @NotNull @NotBlank @Size(max=255)
+    private String email;
+
+    @Size(max=1024)
+    private String avatarPath;
+
+    @NotNull @Size(max=255)
+    private String hashedPassword;
+
+    private LocalDate dropoutDate;
+
+    @NotNull
+    private LocalDate enrollDate;
 
     public UUID getId() {
         return id;
@@ -130,7 +153,7 @@ public class StudentDto {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hashCode(id);
     }
 
 

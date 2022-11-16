@@ -2,15 +2,15 @@ package com.foxminded.ums.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foxminded.ums.dto.LectureDto;
-import com.foxminded.ums.service.LectureService;
+import com.foxminded.ums.validation.ClockBean;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -18,9 +18,11 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.transaction.Transactional;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,6 +43,16 @@ class LectureRestControllerIntegrationTest extends BaseIT{
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @SpyBean
+    private ClockBean clockBean;
+
+    @BeforeEach
+    void setFixedClockForTests() {
+        String fixedTestInstantTime = "2022-11-11T11:11:11Z";
+        String fixedTestZone = "Etc/UTC";
+        clockBean.setClock(Clock.fixed(Instant.parse(fixedTestInstantTime), ZoneId.of(fixedTestZone)));
+    }
 
     @Test
     @Sql(value = "/insert_all_data.sql")

@@ -1,9 +1,7 @@
 package com.foxminded.ums.service;
 
 import com.foxminded.ums.dto.LectureDto;
-import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.entities.Lecture;
-import com.foxminded.ums.entities.Student;
 import com.foxminded.ums.repository.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

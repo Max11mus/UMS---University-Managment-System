@@ -1,6 +1,9 @@
 package com.foxminded.ums.entities;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -19,22 +22,23 @@ public abstract class Person {
 
     @Column(name = "surname")
     private String surname;
+
     @Column(name = "birthDate")
     private LocalDate birthDate;
 
     @Column(name = "timeZone")
     private TimeZone timeZone;
 
-    @Column(name = "login")
+    @Column(name = "login", unique = true)
     private String login;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "avatar_path")
     private String avatarPath;
 
-    @Column(name = "hashed_password")
+    @Column(name = "hashed_password", updatable = false)
     private String hashedPassword;
 
     public UUID getId() {

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
@@ -15,6 +16,7 @@ public class Subject {
     @Column(name = "subject_id")
     UUID id;
 
+    @NotNull
     @Column(name = "subject_name")
     String name;
 

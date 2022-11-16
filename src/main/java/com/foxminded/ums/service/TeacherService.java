@@ -1,8 +1,6 @@
 package com.foxminded.ums.service;
 
-import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.dto.TeacherDto;
-import com.foxminded.ums.entities.Student;
 import com.foxminded.ums.entities.Teacher;
 import com.foxminded.ums.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;

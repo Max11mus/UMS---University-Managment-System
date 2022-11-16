@@ -43,11 +43,17 @@ public class TransactionsAspectLogger {
         try {
             result = point.proceed();
             LOGGER.info("Result: ");
-            LOGGER.info(result.toString());
+
+            if (result != null) {
+                LOGGER.info(result.toString());
+            } else {
+                LOGGER.info("void");
+            }
+
             LOGGER.info("End Transaction");
         } catch (Throwable e) {
-            LOGGER.info(e.getMessage(), e);
-            LOGGER.info("Unroll Transaction");
+            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Unroll Transaction");
             if (e instanceof NoSuchElementException) {
 
                 if (signature.contains("findTeacher")) {

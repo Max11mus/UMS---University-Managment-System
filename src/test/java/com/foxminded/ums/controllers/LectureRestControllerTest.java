@@ -3,7 +3,8 @@ package com.foxminded.ums.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foxminded.ums.dto.LectureDto;
 import com.foxminded.ums.service.LectureService;
-import org.junit.jupiter.api.Assertions;
+import com.foxminded.ums.validation.ClockBean;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -11,16 +12,18 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,6 +41,16 @@ class LectureRestControllerTest {
 
     @MockBean
     private LectureService lectureService;
+
+    @SpyBean
+    private ClockBean clockBean;
+
+    @BeforeEach
+    void setFixedClockForTests() {
+        String fixedTestInstantTime = "2022-11-11T11:11:11Z";
+        String fixedTestZone = "Etc/UTC";
+        clockBean.setClock(Clock.fixed(Instant.parse(fixedTestInstantTime), ZoneId.of(fixedTestZone)));
+    }
 
     @Test
     void findLecture_mustReturnStatus200AndExistedLectureDtoInJsonFormat_whenGetMethod() throws Exception {

@@ -3,6 +3,8 @@ package com.foxminded.ums.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foxminded.ums.dto.TimeTableUnitDto;
 import com.foxminded.ums.service.TimeTableService;
+import com.foxminded.ums.validation.ClockBean;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -10,13 +12,17 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +47,16 @@ class TimeTableRestControllerTest {
 
     @MockBean
     private TimeTableService timeTableService;
+
+    @SpyBean
+    private ClockBean clockBean;
+
+    @BeforeEach
+    void setFixedClockForTests() {
+        String fixedTestInstantTime = "2022-11-11T11:11:11Z";
+        String fixedTestZone = "Etc/UTC";
+        clockBean.setClock(Clock.fixed(Instant.parse(fixedTestInstantTime), ZoneId.of(fixedTestZone)));
+    }
 
     @Test
     void getTimeTableForStudent_mustReturnStatus200AndTimeTableUnitDtosInJsonFormat_whenGetMethod() throws Exception {
