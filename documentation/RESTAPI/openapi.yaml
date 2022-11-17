@@ -98,8 +98,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
           content:
             '*/*':
               schema:
@@ -216,8 +216,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
           content:
             '*/*':
               schema:
@@ -293,8 +293,8 @@ paths:
               $ref: '#/components/schemas/TeacherDto'
         required: true
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             '*/*':
               schema:
@@ -370,8 +370,8 @@ paths:
               $ref: '#/components/schemas/StudentDto'
         required: true
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             '*/*':
               schema:

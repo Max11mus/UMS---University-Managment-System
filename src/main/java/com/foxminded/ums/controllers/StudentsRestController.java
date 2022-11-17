@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -29,6 +30,7 @@ public class StudentsRestController {
     private StudentService studentService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<StudentDto>> findStudents(@PageableDefault(page = 0, size = 5) Pageable pageable) {
         List<StudentDto> studentDtos = studentService.findStudentsPageable(pageable);
 
@@ -36,6 +38,7 @@ public class StudentsRestController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StudentDto> addStudent(@Valid @RequestBody StudentDto studentDto) {
         StudentDto addedStudent = studentService.addStudent(studentDto);
 
@@ -43,6 +46,7 @@ public class StudentsRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<StudentDto> findStudent(@Valid @PathVariable("id") @UUID String id) {
         java.util.UUID studentId = java.util.UUID.fromString(id);
 
@@ -52,6 +56,7 @@ public class StudentsRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<StudentDto> updateStudent(@Valid @RequestBody StudentDto studentDto,
                                                     @Valid @PathVariable("id") @UUID String id) {
         java.util.UUID studentId = java.util.UUID.fromString(id);
@@ -62,6 +67,7 @@ public class StudentsRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<StudentDto> deleteStudent(@Valid @PathVariable("id") @UUID String id) {
         java.util.UUID studentId = java.util.UUID.fromString(id);
         studentService.deleteStudent(studentId);

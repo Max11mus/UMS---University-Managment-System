@@ -4,12 +4,14 @@ import com.foxminded.ums.dto.TimeTableUnitDto;
 import com.foxminded.ums.service.TimeTableService;
 import com.foxminded.ums.validation.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -27,6 +29,7 @@ public class TimeTableRestController {
     private TimeTableService timeTableService;
 
     @RequestMapping(value = "/student/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForStudent(
             @Valid @PathVariable("id") @UUID String id,
             @RequestParam(value = "startDay") String startDay,
@@ -44,6 +47,7 @@ public class TimeTableRestController {
     }
 
     @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForTeacher(
             @Valid @PathVariable("id") @UUID String id,
             @RequestParam(value = "startDay") String startDay,
