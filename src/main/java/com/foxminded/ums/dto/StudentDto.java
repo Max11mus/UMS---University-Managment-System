@@ -3,7 +3,6 @@ package com.foxminded.ums.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxminded.ums.validation.OlderThanSixteen;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -25,6 +26,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     private final static Logger LOGGER = LoggerFactory.getLogger(RestApiExceptionHandler.class);
 
     @Override
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
@@ -49,6 +51,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {LectureNotFoundException.class,
             StudentNotFoundException.class,
             TeacherNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponce> handleNotFound(RuntimeException e) {
         ErrorResponce errorResponce = new ErrorResponce(HttpStatus.NOT_FOUND, e.getMessage(),
                 "The server cannot find the requested resource. In the browser, " +
@@ -64,6 +67,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {ServerErrorException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponce> handleServerError(RuntimeException e) {
         ErrorResponce errorResponce = new ErrorResponce(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),
                 "The server has encountered a situation it does not know how to handle.");
@@ -76,6 +80,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ConstraintViolationException.class,
             DataIntegrityViolationException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponce> handleBadRequestError(RuntimeException e) {
         ErrorResponce errorResponce = getErrorResponceForBadRequest(e);
 
