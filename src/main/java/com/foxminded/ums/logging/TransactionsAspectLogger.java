@@ -1,5 +1,7 @@
 package com.foxminded.ums.logging;
 
+import com.foxminded.ums.dto.StudentDto;
+import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.exeptions.LectureNotFoundException;
 import com.foxminded.ums.exeptions.ServerErrorException;
 import com.foxminded.ums.exeptions.StudentNotFoundException;
@@ -10,6 +12,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.NoSuchElementException;
@@ -54,10 +57,21 @@ public class TransactionsAspectLogger {
         } catch (Throwable e) {
             LOGGER.error(e.getMessage(), e);
             LOGGER.error("Unroll Transaction");
-            if (e instanceof NoSuchElementException) {
+            if (e instanceof NoSuchElementException || e instanceof EmptyResultDataAccessException) {
+
+                if (signature.contains("deleteStudent")) {
+                    throw new StudentNotFoundException((UUID) args[0], e);
+                }
+                if (signature.contains("deleteTeacher")) {
+                    throw new TeacherNotFoundException((UUID) args[0], e);
+                }
 
                 if (signature.contains("findTeacher")) {
                     throw new TeacherNotFoundException((UUID) args[0], e);
+                }
+
+                if (signature.contains("updateTeacher")) {
+                    throw new TeacherNotFoundException(((TeacherDto) args[0]).getId(), e);
                 }
 
                 if (signature.contains("findLecture")) {
@@ -66,6 +80,10 @@ public class TransactionsAspectLogger {
 
                 if (signature.contains("findStudent")) {
                     throw new StudentNotFoundException((UUID) args[0], e);
+                }
+
+                if (signature.contains("updateStudent")) {
+                    throw new TeacherNotFoundException(((StudentDto) args[0]).getId(), e);
                 }
 
             } else {

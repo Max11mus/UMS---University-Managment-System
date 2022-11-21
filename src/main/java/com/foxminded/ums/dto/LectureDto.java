@@ -3,6 +3,7 @@ package com.foxminded.ums.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxminded.ums.entities.Subject;
 import com.foxminded.ums.entities.Teacher;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,17 +12,27 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LectureDto {
+    @Schema(description = "Unique UUID identifier of the Lecture.",
+            example = "12611b1e-b277-4e64-8ff3-243a5d6fbc2d", required = true)
     private UUID id;
 
+    @Schema(description = "Topic of the Lecture.",
+           example = "SQL", required = true)
     @NotNull @Size(max=255)
     private String topic;
 
+    @Schema(description = "Description of the Lecture.",
+            example = "SQL - Structured Query Language", required = true)
     @NotNull @Size(max=1024)
     private String description;
 
+    @Schema(description = "Teacher Object.",
+            required = true)
     @NotNull
     private Teacher teacher;
 
+    @Schema(description = "Subject Object.",
+            required = true)
     @NotNull
     private Subject subject;
 

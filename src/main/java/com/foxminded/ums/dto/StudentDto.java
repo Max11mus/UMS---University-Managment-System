@@ -35,19 +35,19 @@ public class StudentDto {
     @OlderThanSixteen
     private LocalDate birthDate;
 
-    @Schema(description = "TimeZone of student",
+    @Schema(description = "TimeZone of Student",
             example = "UTC",
             required = false,
             nullable = true)
     private TimeZone timeZone;
 
-    @Schema(description = "Login of student, must be uniqe",
+    @Schema(description = "Login of Student, must be uniqe",
             example = "Suzi.Gallagher",
             required = true)
     @NotNull @NotBlank @Size(max=255)
     private String login;
 
-    @Schema(description = "Email of student, must be uniqe",
+    @Schema(description = "Email of Student, must be uniqe",
             example = "Suzi.Gallagher@gmail.com",
             required = true)
     @NotNull @NotBlank @Size(max=255)
@@ -62,7 +62,7 @@ public class StudentDto {
 
     @Schema(description = "Hashed Password of Student ",
             example = "",
-            required = false)
+            required = true)
     @NotNull @Size(max=255)
     private String hashedPassword;
 

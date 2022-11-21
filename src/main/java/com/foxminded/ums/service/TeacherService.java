@@ -39,11 +39,17 @@ public class TeacherService {
     @Transactional
     public TeacherDto addTeacher(TeacherDto teacherDto) {
         Teacher entity = convertToEntity(teacherDto);
+        entity.setId(null);
+        if (entity.getHashedPassword() == null) {
+            entity.setHashedPassword("");
+        }
         return convertToDto(teacherRepository.save(entity));
     }
 
     @Transactional
     public TeacherDto updateTeacher(TeacherDto teacherDto) {
+        findTeacher(teacherDto.getId());
+
         Teacher entity = convertToEntity(teacherDto);
         teacherRepository.save(entity);
 

@@ -5,52 +5,64 @@ info:
 servers:
   - url: http://localhost:8080
     description: Generated server url
+tags:
+  - name: teachers
+    description: Teacher API
+  - name: lectures
+    description: lecture API
+  - name: students
+    description: Student API
+  - name: timetable
+    description: Timetable API
 paths:
   /teachers/{id}:
     get:
       tags:
-        - teachers-rest-controller
+        - teachers
+      summary: Find Teacher by ID
+      description: Returns one Teacher with ID
       operationId: findTeacher
       parameters:
         - name: id
           in: path
+          description: Teacher UUID
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: OK
+          description: Ok
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/TeacherDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
-            '*/*':
+            application/json:
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
-          description: Not Found
+          description: NOT_FOUND
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
     put:
       tags:
-        - teachers-rest-controller
+        - teachers
+      summary: Update existed Teacher
       operationId: updateTeacher
       parameters:
         - name: id
           in: path
+          description: Teacher UUID
           required: true
           schema:
             type: string
@@ -62,38 +74,38 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
+          description: Ok
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/TeacherDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
-            '*/*':
+            application/json:
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
-          description: Not Found
+          description: NOT_FOUND
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
     delete:
       tags:
-        - teachers-rest-controller
+        - teachers
+      summary: Delete existed Student
       operationId: deleteTeacher
       parameters:
         - name: id
           in: path
+          description: Teacher to delete. Cannot null or empty
           required: true
           schema:
             type: string
@@ -105,21 +117,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/TeacherDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
             '*/*':
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
-          description: Not Found
+          description: NOT_FOUND
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
             '*/*':
               schema:
@@ -127,48 +137,51 @@ paths:
   /students/{id}:
     get:
       tags:
-        - students-rest-controller
+        - students
+      summary: Find Student by ID
+      description: Returns one Student with ID
       operationId: findStudent
       parameters:
         - name: id
           in: path
+          description: Student UUID
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: OK
+          description: Ok
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StudentDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
-            '*/*':
+            application/json:
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
-          description: Not Found
+          description: NOT_FOUND
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
     put:
       tags:
-        - students-rest-controller
+        - students
+      summary: Update existed Student
       operationId: updateStudent
       parameters:
         - name: id
           in: path
+          description: Student UUID
           required: true
           schema:
             type: string
@@ -180,38 +193,38 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
+          description: Ok
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StudentDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
-            '*/*':
+            application/json:
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
-          description: Not Found
+          description: NOT_FOUND
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
     delete:
       tags:
-        - students-rest-controller
+        - students
+      summary: Delete existed Student
       operationId: deleteStudent
       parameters:
         - name: id
           in: path
+          description: Student to delete. Cannot null or empty
           required: true
           schema:
             type: string
@@ -223,21 +236,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/StudentDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
             '*/*':
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
-          description: Not Found
+          description: NOT_FOUND
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
             '*/*':
               schema:
@@ -245,31 +256,32 @@ paths:
   /teachers:
     get:
       tags:
-        - teachers-rest-controller
+        - teachers
+      summary: Show List of Teachers page by page
+      description: Show One Page of List of Teachers
       operationId: findTeachers
       parameters:
         - name: pageable
           in: query
+          description: page > 0 (default = 0), size > 1 (default = 5); masked by default values
           required: true
           schema:
             $ref: '#/components/schemas/Pageable'
       responses:
         '200':
-          description: OK
+          description: Ok
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/TeacherDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
-            '*/*':
+            application/json:
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
           description: Not Found
           content:
@@ -277,14 +289,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
     post:
       tags:
-        - teachers-rest-controller
+        - teachers
+      summary: Add new Teacher
       operationId: addTeacher
       requestBody:
         content:
@@ -296,17 +309,15 @@ paths:
         '201':
           description: Created
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/TeacherDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
-            '*/*':
+            application/json:
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
           description: Not Found
           content:
@@ -314,39 +325,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
   /students:
     get:
       tags:
-        - students-rest-controller
+        - students
+      summary: Show List of Students page by page
+      description: Show One Page of List of Students
       operationId: findStudents
       parameters:
         - name: pageable
           in: query
+          description: page > 0 (default = 0), size > 1 (default = 5); masked by default values
           required: true
           schema:
             $ref: '#/components/schemas/Pageable'
       responses:
         '200':
-          description: OK
+          description: Ok
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/StudentDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
-            '*/*':
+            application/json:
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
           description: Not Found
           content:
@@ -354,14 +366,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
     post:
       tags:
-        - students-rest-controller
+        - students
+      summary: Add new Student
       operationId: addStudent
       requestBody:
         content:
@@ -373,17 +386,15 @@ paths:
         '201':
           description: Created
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StudentDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
-            '*/*':
+            application/json:
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
           description: Not Found
           content:
@@ -391,35 +402,39 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
   /timetable/teacher/{id}:
     get:
       tags:
-        - time-table-rest-controller
+        - timetable
+      summary: Show List of TimetableUnits For Teacher with ID
       operationId: getTimeTableForTeacher
       parameters:
         - name: id
           in: path
+          description: Teavher UUID. Cannot null or empty
           required: true
           schema:
             type: string
         - name: startDay
           in: query
+          description: Starting Day. Cannot null or empty. Format yyyy-mm-dd
           required: true
           schema:
             type: string
         - name: endDay
           in: query
+          description: Ending Day. Cannot null or empty. Format yyyy-mm-dd
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: OK
+          description: Ok
           content:
             '*/*':
               schema:
@@ -427,13 +442,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/TimeTableUnitDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
             '*/*':
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
           description: Not Found
           content:
@@ -441,7 +454,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
             '*/*':
               schema:
@@ -449,27 +462,31 @@ paths:
   /timetable/student/{id}:
     get:
       tags:
-        - time-table-rest-controller
+        - timetable
+      summary: Show List of TimetableUnits For Student with ID
       operationId: getTimeTableForStudent
       parameters:
         - name: id
           in: path
+          description: Student UUID. Cannot null or empty
           required: true
           schema:
             type: string
         - name: startDay
           in: query
+          description: Starting Day. Cannot null or empty. Format yyyy-mm-dd
           required: true
           schema:
             type: string
         - name: endDay
           in: query
+          description: Ending Day. Cannot null or empty. Format yyyy-mm-dd
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: OK
+          description: Ok
           content:
             '*/*':
               schema:
@@ -477,13 +494,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/TimeTableUnitDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
             '*/*':
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
           description: Not Found
           content:
@@ -491,7 +506,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
             '*/*':
               schema:
@@ -499,39 +514,40 @@ paths:
   /lectures/{id}:
     get:
       tags:
-        - lecture-rest-controller
+        - lectures
+      summary: Find Lecture by ID
+      description: Returns one Lecture with ID
       operationId: findLecture
       parameters:
         - name: id
           in: path
+          description: Lecture UUID
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: OK
+          description: Ok
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/LectureDto'
         '400':
-          description: Bad Request
+          description: BAD_REQUEST
           content:
-            '*/*':
+            application/json:
               schema:
-                oneOf:
-                  - type: object
-                  - $ref: '#/components/schemas/ErrorResponce'
+                $ref: '#/components/schemas/ErrorResponce'
         '404':
-          description: Not Found
+          description: NOT_FOUND
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
         '500':
-          description: Internal Server Error
+          description: INTERNAL_SERVER_ERROR
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponce'
 components:
@@ -541,6 +557,8 @@ components:
       properties:
         httpStatusCode:
           type: string
+          description: 'HttpStatus: BAD_REQUEST, INTERNAL_SERVER_ERROR, etc.'
+          example: BAD_REQUEST
           enum:
             - 100 CONTINUE
             - 101 SWITCHING_PROTOCOLS
@@ -612,8 +630,12 @@ components:
             - 511 NETWORK_AUTHENTICATION_REQUIRED
         message:
           type: string
+          description: Error Message
+          example: 'findTeacher.id: 111-222-333-444  isn''t correct  UUID. See RFC 4122 - 4.1. Format'
         description:
           type: string
+          description: Error Description
+          example: The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).
     TeacherDto:
       required:
         - academicDegree
@@ -621,6 +643,7 @@ components:
         - email
         - employmentDate
         - hashedPassword
+        - id
         - login
         - name
         - surname
@@ -628,18 +651,26 @@ components:
       properties:
         id:
           type: string
+          description: Unique UUID identifier of the Teacher.
           format: uuid
+          example: 12611b1e-b277-4e64-8ff3-243a5d6fbc2d
         name:
           maxLength: 20
           minLength: 0
           type: string
+          description: Name of the Teacher.
+          example: Suzanne
         surname:
           maxLength: 20
           minLength: 0
           type: string
+          description: Surname of the Teacher.
+          example: Gallagher
         birthDate:
           type: string
+          description: Birth Date of Teacher in YYYY-mm-DD format
           format: date
+          example: '1973-10-20'
         timeZone:
           type: object
           properties:
@@ -653,35 +684,51 @@ components:
             rawOffset:
               type: integer
               format: int32
+          description: TimeZone of Teacher
+          nullable: true
+          example: UTC
         login:
           maxLength: 255
           minLength: 0
           type: string
+          description: Login of Teacher, must be uniqe
+          example: Suzi.Gallagher
         email:
           maxLength: 255
           minLength: 0
           type: string
+          description: Email of Teacher, must be uniqe
+          example: Suzi.Gallagher@gmail.com
         avatarPath:
           maxLength: 1024
           minLength: 0
           type: string
+          description: AvatarLink of Teacher
+          nullable: true
+          example: https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50.jpg
         hashedPassword:
           maxLength: 255
           minLength: 0
           type: string
+          description: 'Hashed Password of Teacher '
         academicDegree:
           maxLength: 255
           minLength: 0
           type: string
+          description: Academic Degree of Teacher
+          example: Master of Science
         employmentDate:
           type: string
+          description: Employment Date of the Teacher in YYYY-mm-DD format
           format: date
+          example: '2022-07-07'
     StudentDto:
       required:
         - birthDate
         - email
         - enrollDate
         - hashedPassword
+        - id
         - login
         - name
         - surname
@@ -689,18 +736,26 @@ components:
       properties:
         id:
           type: string
+          description: Unique UUID identifier of the Student.
           format: uuid
+          example: 12611b1e-b277-4e64-8ff3-243a5d6fbc2d
         name:
           maxLength: 20
           minLength: 0
           type: string
+          description: Name of the Student.
+          example: Suzanne
         surname:
           maxLength: 20
           minLength: 0
           type: string
+          description: Surname of the Student.
+          example: Gallagher
         birthDate:
           type: string
+          description: Birth Date of Student in YYYY-mm-DD format
           format: date
+          example: '1973-10-20'
         timeZone:
           type: object
           properties:
@@ -714,28 +769,43 @@ components:
             rawOffset:
               type: integer
               format: int32
+          description: TimeZone of Student
+          nullable: true
+          example: UTC
         login:
           maxLength: 255
           minLength: 0
           type: string
+          description: Login of Student, must be uniqe
+          example: Suzi.Gallagher
         email:
           maxLength: 255
           minLength: 0
           type: string
+          description: Email of Student, must be uniqe
+          example: Suzi.Gallagher@gmail.com
         avatarPath:
           maxLength: 1024
           minLength: 0
           type: string
+          description: AvatarLink of Student
+          nullable: true
+          example: https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50.jpg
         hashedPassword:
           maxLength: 255
           minLength: 0
           type: string
+          description: 'Hashed Password of Student '
         dropoutDate:
           type: string
+          description: Dropout Date of the Student in YYYY-mm-DD format
           format: date
+          example: '2022-07-07'
         enrollDate:
           type: string
+          description: Enroll Date of the Student in YYYY-mm-DD format
           format: date
+          example: '2022-07-07'
     Group:
       type: object
       properties:
@@ -749,6 +819,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Student'
+      description: Array of Group Object.
     Lecture:
       type: object
       properties:
@@ -763,6 +834,7 @@ components:
           $ref: '#/components/schemas/Teacher'
         subject:
           $ref: '#/components/schemas/Subject'
+      description: Lecture Object.
     Location:
       type: object
       properties:
@@ -771,6 +843,7 @@ components:
           format: uuid
         address:
           type: string
+      description: Location Object.
     Student:
       required:
         - enrollDate
@@ -825,6 +898,7 @@ components:
           type: string
         description:
           type: string
+      description: Subject Object.
     Teacher:
       type: object
       properties:
@@ -864,12 +938,17 @@ components:
         employmentDate:
           type: string
           format: date
+      description: Teacher Object.
     TimeTableUnitDto:
+      required:
+        - id
       type: object
       properties:
         id:
           type: string
+          description: Unique UUID identifier of the TimeTableUnit.
           format: uuid
+          example: 12611b1e-b277-4e64-8ff3-243a5d6fbc2d
         location:
           $ref: '#/components/schemas/Location'
         lecture:
@@ -877,13 +956,16 @@ components:
         groups:
           uniqueItems: true
           type: array
+          description: Array of Group Object.
           items:
             $ref: '#/components/schemas/Group'
         begin:
           type: string
+          description: 'Time of beginning in format: yyyy-mm-dd HH:mm:ss.SSS'
           format: date-time
         end:
           type: string
+          description: 'Time of ending in format: yyyy-mm-dd HH:mm:ss.SSS'
           format: date-time
     Pageable:
       type: object
@@ -903,6 +985,7 @@ components:
     LectureDto:
       required:
         - description
+        - id
         - subject
         - teacher
         - topic
@@ -910,15 +993,21 @@ components:
       properties:
         id:
           type: string
+          description: Unique UUID identifier of the Lecture.
           format: uuid
+          example: 12611b1e-b277-4e64-8ff3-243a5d6fbc2d
         topic:
           maxLength: 255
           minLength: 0
           type: string
+          description: Topic of the Lecture.
+          example: SQL
         description:
           maxLength: 1024
           minLength: 0
           type: string
+          description: Description of the Lecture.
+          example: SQL - Structured Query Language
         teacher:
           $ref: '#/components/schemas/Teacher'
         subject:

@@ -44,7 +44,9 @@ public class StudentsRestController {
             tags = {"students"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok", content =
-            @Content(array = @ArraySchema(schema = @Schema(implementation = StudentDto.class))))
+            @Content(array = @ArraySchema(schema = @Schema(implementation = StudentDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
@@ -62,22 +64,41 @@ public class StudentsRestController {
             description = "",
             tags = {"students"})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @ApiResponse(responseCode = "201", description = "Created", content =
             @Content(schema = @Schema(implementation = StudentDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
-    @PostMapping
+    @PostMapping(consumes = { "application/json"}, produces = { "application/json"})
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StudentDto> addStudent(@Valid @RequestBody StudentDto studentDto) {
+    public ResponseEntity<StudentDto> addStudent(
+            @Parameter(description = "Student to add. Cannot null or empty",
+            required = true, schema = @Schema(implementation = StudentDto.class))
+            @Valid @RequestBody StudentDto studentDto) {
         StudentDto addedStudent = studentService.addStudent(studentDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(addedStudent);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @Operation(summary = "Find Student by ID",
+            description = "Returns one Student with ID", tags = { "students" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(schema = @Schema(implementation = StudentDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<StudentDto> findStudent(@Valid @PathVariable("id") @UUID String id) {
+    public ResponseEntity<StudentDto> findStudent(
+            @Parameter(description = "Student UUID", required = true)
+            @Valid @PathVariable("id") @UUID String id) {
         java.util.UUID studentId = java.util.UUID.fromString(id);
 
         StudentDto studentDto = studentService.findStudent(studentId);
@@ -85,10 +106,29 @@ public class StudentsRestController {
         return ResponseEntity.ok().body(studentDto);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @Operation(summary = "Update existed Student",
+            description = "",
+            tags = {"students"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(schema = @Schema(implementation = StudentDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.PUT,
+            consumes = { "application/json"},
+            produces = { "application/json"} )
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<StudentDto> updateStudent(@Valid @RequestBody StudentDto studentDto,
-                                                    @Valid @PathVariable("id") @UUID String id) {
+    public ResponseEntity<StudentDto> updateStudent(
+            @Parameter(description = "Student to update. Cannot null or empty", required = true)
+            @Valid @RequestBody StudentDto studentDto,
+            @Parameter(description = "Student UUID", required = true)
+            @Valid @PathVariable("id") @UUID String id) {
         java.util.UUID studentId = java.util.UUID.fromString(id);
         studentDto.setId(studentId);
         StudentDto updatedStudent = studentService.updateStudent(studentDto);
@@ -96,9 +136,24 @@ public class StudentsRestController {
         return ResponseEntity.ok().body(updatedStudent);
     }
 
+    @Operation(summary = "Delete existed Student",
+            description = "",
+            tags = {"students"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content", content =
+            @Content(schema = @Schema(implementation = StudentDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<StudentDto> deleteStudent(@Valid @PathVariable("id") @UUID String id) {
+    public ResponseEntity<StudentDto> deleteStudent(
+            @Parameter(description = "Student to delete. Cannot null or empty", required = true)
+            @Valid @PathVariable("id") @UUID String id) {
         java.util.UUID studentId = java.util.UUID.fromString(id);
         studentService.deleteStudent(studentId);
 

@@ -1,8 +1,18 @@
 package com.foxminded.ums.controllers;
 
+import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.dto.TeacherDto;
+import com.foxminded.ums.exeptions.ErrorResponce;
 import com.foxminded.ums.service.TeacherService;
 import com.foxminded.ums.validation.UUID;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,30 +34,72 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping(value = "/teachers")
+@Tag(name = "teachers", description = "Teacher API")
 public class TeachersRestController {
 
     @Autowired
     private TeacherService teacherService;
 
-    @GetMapping
+    @Operation(summary = "Show List of Teachers page by page",
+            description = "Show One Page of List of Teachers",
+            tags = {"teachers"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(array = @ArraySchema(schema = @Schema(implementation = TeacherDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
+    @GetMapping(produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<TeacherDto>> findTeachers(@PageableDefault(page = 0, size = 5) Pageable pageable) {
+    public ResponseEntity<List<TeacherDto>> findTeachers(
+            @Parameter(description = "page > 0 (default = 0), size > 1 (default = 5); masked by default values")
+            @PageableDefault(page = 0, size = 5) Pageable pageable) {
         List<TeacherDto> teacherDtos = teacherService.findTeachersPageable(pageable);
 
         return ResponseEntity.ok().body(teacherDtos);
     }
 
-    @PostMapping
+    @Operation(summary = "Add new Teacher",
+            description = "",
+            tags = {"teachers"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created", content =
+            @Content(schema = @Schema(implementation = TeacherDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
+    @PostMapping(consumes = { "application/json"}, produces = { "application/json"})
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<TeacherDto> addTeacher(@Valid @RequestBody TeacherDto teacherDto) {
+    public ResponseEntity<TeacherDto> addTeacher(
+            @Parameter(description = "Student to add. Cannot null or empty",
+                    required = true, schema = @Schema(implementation = TeacherDto.class))
+            @Valid @RequestBody TeacherDto teacherDto) {
         TeacherDto addedTeacher = teacherService.addTeacher(teacherDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(addedTeacher);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @Operation(summary = "Find Teacher by ID",
+            description = "Returns one Teacher with ID", tags = { "teachers" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(schema = @Schema(implementation = TeacherDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<TeacherDto> findTeacher(@Valid @PathVariable("id") @UUID String id) {
+    public ResponseEntity<TeacherDto> findTeacher(
+            @Parameter(description = "Teacher UUID", required = true)
+            @Valid @PathVariable("id") @UUID String id) {
         java.util.UUID teacherId = java.util.UUID.fromString(id);
 
         TeacherDto teacherDto = teacherService.findTeacher(teacherId);
@@ -55,10 +107,29 @@ public class TeachersRestController {
         return ResponseEntity.ok().body(teacherDto);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @Operation(summary = "Update existed Teacher",
+            description = "",
+            tags = {"teachers"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(schema = @Schema(implementation = TeacherDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.PUT,
+            consumes = { "application/json"},
+            produces = { "application/json"} )
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<TeacherDto> updateTeacher(@Valid @RequestBody TeacherDto teacherDto,
-                                                    @Valid @PathVariable("id") @UUID String id) {
+    public ResponseEntity<TeacherDto> updateTeacher(
+            @Parameter(description = "Teacher to update. Cannot null or empty", required = true)
+            @Valid @RequestBody TeacherDto teacherDto,
+            @Parameter(description = "Teacher UUID", required = true)
+            @Valid @PathVariable("id") @UUID String id) {
         java.util.UUID teacherId = java.util.UUID.fromString(id);
         teacherDto.setId(teacherId);
 
@@ -67,9 +138,24 @@ public class TeachersRestController {
         return ResponseEntity.ok().body(updatedTeacher);
     }
 
+    @Operation(summary = "Delete existed Student",
+            description = "",
+            tags = {"teachers"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content", content =
+            @Content(schema = @Schema(implementation = TeacherDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<TeacherDto> deleteTeacher(@Valid @PathVariable("id") @UUID String id) {
+    public ResponseEntity<TeacherDto> deleteTeacher(
+            @Parameter(description = "Teacher to delete. Cannot null or empty", required = true)
+            @Valid @PathVariable("id") @UUID String id) {
         java.util.UUID teacherId = java.util.UUID.fromString(id);
         teacherService.deleteTeacher(teacherId);
 

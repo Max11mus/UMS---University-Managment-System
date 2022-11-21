@@ -1,8 +1,18 @@
 package com.foxminded.ums.controllers;
 
+import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.dto.TimeTableUnitDto;
+import com.foxminded.ums.exeptions.ErrorResponce;
 import com.foxminded.ums.service.TimeTableService;
 import com.foxminded.ums.validation.UUID;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +32,32 @@ import java.util.TimeZone;
 
 @RestController
 @Validated
+@Tag(name = "timetable", description = "Timetable API")
 @RequestMapping(value = "/timetable")
 public class TimeTableRestController {
 
     @Autowired
     private TimeTableService timeTableService;
 
+    @Operation(summary = "Show List of TimetableUnits For Student with ID",
+            description = "",
+            tags = {"timetable"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(array = @ArraySchema(schema = @Schema(implementation = TimeTableUnitDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
     @RequestMapping(value = "/student/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForStudent(
+            @Parameter(description = "Student UUID. Cannot null or empty", required = true)
             @Valid @PathVariable("id") @UUID String id,
+            @Parameter(description = "Starting Day. Cannot null or empty. Format yyyy-mm-dd", required = true)
             @RequestParam(value = "startDay") String startDay,
+            @Parameter(description = "Ending Day. Cannot null or empty. Format yyyy-mm-dd", required = true)
             @RequestParam(value = "endDay") String endDay) {
 
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
@@ -46,11 +71,25 @@ public class TimeTableRestController {
         return ResponseEntity.ok().body(timeTableUnitDto);
     }
 
+    @Operation(summary = "Show List of TimetableUnits For Teacher with ID",
+            description = "",
+            tags = {"timetable"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(array = @ArraySchema(schema = @Schema(implementation = TimeTableUnitDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
     @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForTeacher(
+            @Parameter(description = "Teavher UUID. Cannot null or empty", required = true)
             @Valid @PathVariable("id") @UUID String id,
+            @Parameter(description = "Starting Day. Cannot null or empty. Format yyyy-mm-dd", required = true)
             @RequestParam(value = "startDay") String startDay,
+            @Parameter(description = "Ending Day. Cannot null or empty. Format yyyy-mm-dd", required = true)
             @RequestParam(value = "endDay") String endDay) {
 
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
