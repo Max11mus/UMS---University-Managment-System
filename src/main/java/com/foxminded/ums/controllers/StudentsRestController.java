@@ -1,8 +1,17 @@
 package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.StudentDto;
+import com.foxminded.ums.exeptions.ErrorResponce;
 import com.foxminded.ums.service.StudentService;
 import com.foxminded.ums.validation.UUID;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,19 +33,40 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping(value = "/students")
+@Tag(name = "students", description = "Student API")
 public class StudentsRestController {
 
     @Autowired
     private StudentService studentService;
 
-    @GetMapping
+    @Operation(summary = "Show List of Students page by page",
+            description = "Show One Page of List of Students",
+            tags = {"students"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(array = @ArraySchema(schema = @Schema(implementation = StudentDto.class))))
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
+    @GetMapping(produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<StudentDto>> findStudents(@PageableDefault(page = 0, size = 5) Pageable pageable) {
+    public ResponseEntity<List<StudentDto>> findStudents(
+            @Parameter(description = "page > 0 (default = 0), size > 1 (default = 5); masked by default values")
+            @PageableDefault(page = 0, size = 5) Pageable pageable) {
         List<StudentDto> studentDtos = studentService.findStudentsPageable(pageable);
 
         return ResponseEntity.ok().body(studentDtos);
     }
 
+    @Operation(summary = "Add new Student",
+            description = "",
+            tags = {"students"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(schema = @Schema(implementation = StudentDto.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StudentDto> addStudent(@Valid @RequestBody StudentDto studentDto) {

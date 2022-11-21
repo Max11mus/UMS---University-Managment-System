@@ -2,6 +2,7 @@ package com.foxminded.ums.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxminded.ums.validation.OlderThanSixteen;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,34 +14,66 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentDto {
+    @Schema(description = "Unique UUID identifier of the Student.",
+            example = "12611b1e-b277-4e64-8ff3-243a5d6fbc2d", required = true)
     private UUID id;
 
+    @Schema(description = "Name of the Student.",
+            example = "Suzanne", required = true)
     @NotNull @NotBlank @Size(max=20)
     private String name;
 
+    @Schema(description = "Surname of the Student.",
+            example = "Gallagher", required = true)
     @NotNull @NotBlank @Size(max=20)
     private String surname;
 
+    @Schema(description = "Birth Date of Student in YYYY-mm-DD format",
+            example = "1973-10-20",
+            required = true)
     @NotNull
     @OlderThanSixteen
     private LocalDate birthDate;
 
+    @Schema(description = "TimeZone of student",
+            example = "UTC",
+            required = false,
+            nullable = true)
     private TimeZone timeZone;
 
+    @Schema(description = "Login of student, must be uniqe",
+            example = "Suzi.Gallagher",
+            required = true)
     @NotNull @NotBlank @Size(max=255)
     private String login;
 
+    @Schema(description = "Email of student, must be uniqe",
+            example = "Suzi.Gallagher@gmail.com",
+            required = true)
     @NotNull @NotBlank @Size(max=255)
     private String email;
 
+    @Schema(description = "AvatarLink of Student",
+            example = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50.jpg",
+            required = false,
+            nullable = true)
     @Size(max=1024)
     private String avatarPath;
 
+    @Schema(description = "Hashed Password of Student ",
+            example = "",
+            required = false)
     @NotNull @Size(max=255)
     private String hashedPassword;
 
+    @Schema(description = "Dropout Date of the Student in YYYY-mm-DD format",
+            example = "2022-07-07",
+            required = false)
     private LocalDate dropoutDate;
 
+    @Schema(description = "Enroll Date of the Student in YYYY-mm-DD format",
+            example = "2022-07-07",
+            required = true)
     @NotNull
     private LocalDate enrollDate;
 
