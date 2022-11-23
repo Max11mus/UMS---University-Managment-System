@@ -2,8 +2,8 @@ package com.foxminded.ums.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxminded.ums.validation.OlderThanSixteen;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,35 +14,67 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TeacherDto {
+    @Schema(description = "Unique UUID identifier of the Teacher.",
+            example = "12611b1e-b277-4e64-8ff3-243a5d6fbc2d", required = true)
     private UUID id;
 
+    @Schema(description = "Name of the Teacher.",
+            example = "Suzanne", required = true)
     @NotNull @NotBlank @Size(max=20)
     private String name;
 
+    @Schema(description = "Surname of the Teacher.",
+            example = "Gallagher", required = true)
     @NotNull @NotBlank @Size(max=20)
     private String surname;
 
+    @Schema(description = "Birth Date of Teacher in YYYY-mm-DD format",
+            example = "1973-10-20",
+            required = true)
     @NotNull
     @OlderThanSixteen
     private LocalDate birthDate;
 
+    @Schema(description = "TimeZone of Teacher",
+            example = "UTC",
+            required = false,
+            nullable = true)
     private TimeZone timeZone;
 
+    @Schema(description = "Login of Teacher, must be uniqe",
+            example = "Suzi.Gallagher",
+            required = true)
     @NotNull @NotBlank @Size(max=255)
     private String login;
 
+    @Schema(description = "Email of Teacher, must be uniqe",
+            example = "Suzi.Gallagher@gmail.com",
+            required = true)
     @NotNull @NotBlank @Size(max=255)
     private String email;
 
+    @Schema(description = "AvatarLink of Teacher",
+            example = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50.jpg",
+            required = false,
+            nullable = true)
     @Size(max=1024)
     private String avatarPath;
 
+    @Schema(description = "Hashed Password of Teacher ",
+            example = "",
+            required = true)
     @NotNull @Size(max=255)
     private String hashedPassword;
 
+    @Schema(description = "Academic Degree of Teacher",
+            example = "Master of Science",
+            required = true)
     @NotNull @NotBlank @Size(max=255)
     private String academicDegree;
 
+    @Schema(description = "Employment Date of the Teacher in YYYY-mm-DD format",
+            example = "2022-07-07",
+            required = true)
     @NotNull
     private LocalDate employmentDate;
 

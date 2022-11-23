@@ -40,11 +40,17 @@ public class StudentService {
     @Transactional
     public StudentDto addStudent(StudentDto studentDto) {
         Student entity = convertToEntity(studentDto);
+        entity.setId(null);
+        if (entity.getHashedPassword() == null) {
+            entity.setHashedPassword("");
+        }
         return convertToDto(studentRepository.save(entity));
     }
 
     @Transactional
     public StudentDto updateStudent(StudentDto studentDto) {
+        findStudent(studentDto.getId());
+
         Student entity = convertToEntity(studentDto);
         studentRepository.save(entity);
 
