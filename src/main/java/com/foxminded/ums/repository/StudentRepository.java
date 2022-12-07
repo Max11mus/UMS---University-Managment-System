@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface StudentRepository extends CrudRepository<Student, UUID>,
         PagingAndSortingRepository<Student, UUID> {
-        }
+    Student findByLogin(String login);
+}

@@ -2,6 +2,7 @@ package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.exeptions.ErrorResponce;
+import com.foxminded.ums.security.SecurityHelper;
 import com.foxminded.ums.service.StudentService;
 import com.foxminded.ums.validation.UUID;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +41,8 @@ public class StudentsRestController {
 
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private SecurityHelper securityHelper;
 
     @Operation(summary = "Show List of Students page by page",
             description = "Show One Page of List of Students",
@@ -54,10 +59,19 @@ public class StudentsRestController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<StudentDto>> findStudents(
             @Parameter(description = "page > 0 (default = 0), size > 1 (default = 5); masked by default values")
-            @PageableDefault(page = 0, size = 5) Pageable pageable) {
+            @PageableDefault(page = 0, size = 5) Pageable pageable,
+            Authentication authentication) {
         List<StudentDto> studentDtos = studentService.findStudentsPageable(pageable);
 
-        return ResponseEntity.ok().body(studentDtos);
+        if (securityHelper.isAdmin(authentication) || securityHelper.isTeacher(authentication)) {
+            return ResponseEntity.ok().body(studentDtos);
+        }
+
+        if (securityHelper.isStudent(authentication)) {
+            throw new AccessDeniedException("Endpoint  forbiden for Student");
+        }
+
+        throw new AccessDeniedException("Endpoint allowed only for Admins and Teachers");
     }
 
     @Operation(summary = "Add new Student",
@@ -76,10 +90,16 @@ public class StudentsRestController {
     public ResponseEntity<StudentDto> addStudent(
             @Parameter(description = "Student to add. Cannot null or empty",
             required = true, schema = @Schema(implementation = StudentDto.class))
-            @Valid @RequestBody StudentDto studentDto) {
+            @Valid @RequestBody StudentDto studentDto,
+            Authentication authentication) {
+
+        if (securityHelper.isAdmin(authentication)){
         StudentDto addedStudent = studentService.addStudent(studentDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(addedStudent);
+        }
+
+        throw new AccessDeniedException("Endpoint allowed only for Admins");
     }
 
     @Operation(summary = "Find Student by ID",
@@ -98,12 +118,17 @@ public class StudentsRestController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<StudentDto> findStudent(
             @Parameter(description = "Student UUID", required = true)
-            @Valid @PathVariable("id") @UUID String id) {
-        java.util.UUID studentId = java.util.UUID.fromString(id);
+            @Valid @PathVariable("id") @UUID String id,
+            Authentication authentication) {
+        if (securityHelper.isAdmin(authentication)) {
+            java.util.UUID studentId = java.util.UUID.fromString(id);
 
-        StudentDto studentDto = studentService.findStudent(studentId);
+            StudentDto studentDto = studentService.findStudent(studentId);
 
-        return ResponseEntity.ok().body(studentDto);
+            return ResponseEntity.ok().body(studentDto);
+        }
+
+        throw new AccessDeniedException("Endpoint allowed only for Admins");
     }
 
     @Operation(summary = "Update existed Student",
@@ -128,12 +153,18 @@ public class StudentsRestController {
             @Parameter(description = "Student to update. Cannot null or empty", required = true)
             @Valid @RequestBody StudentDto studentDto,
             @Parameter(description = "Student UUID", required = true)
-            @Valid @PathVariable("id") @UUID String id) {
-        java.util.UUID studentId = java.util.UUID.fromString(id);
-        studentDto.setId(studentId);
-        StudentDto updatedStudent = studentService.updateStudent(studentDto);
+            @Valid @PathVariable("id") @UUID String id,
+            Authentication authentication) {
 
-        return ResponseEntity.ok().body(updatedStudent);
+        if (securityHelper.isAdmin(authentication)) {
+            java.util.UUID studentId = java.util.UUID.fromString(id);
+            studentDto.setId(studentId);
+            StudentDto updatedStudent = studentService.updateStudent(studentDto);
+
+            return ResponseEntity.ok().body(updatedStudent);
+        }
+
+        throw new AccessDeniedException("Endpoint allowed only for Admins and Teachers");
     }
 
     @Operation(summary = "Delete existed Student",
@@ -153,10 +184,15 @@ public class StudentsRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<StudentDto> deleteStudent(
             @Parameter(description = "Student to delete. Cannot null or empty", required = true)
-            @Valid @PathVariable("id") @UUID String id) {
-        java.util.UUID studentId = java.util.UUID.fromString(id);
-        studentService.deleteStudent(studentId);
+            @Valid @PathVariable("id") @UUID String id,
+            Authentication authentication) {
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        if (securityHelper.isAdmin(authentication)) {
+            java.util.UUID studentId = java.util.UUID.fromString(id);
+            studentService.deleteStudent(studentId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        throw new AccessDeniedException("Endpoint allowed only for Admins");
     }
+
 }

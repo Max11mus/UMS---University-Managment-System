@@ -1,7 +1,6 @@
 package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.LectureDto;
-import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.exeptions.ErrorResponce;
 import com.foxminded.ums.service.LectureService;
 import com.foxminded.ums.validation.UUID;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @Tag(name = "lectures", description = "lecture API")
@@ -48,6 +48,7 @@ public class LectureRestController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<LectureDto> findLecture(
+            Principal principal,
             @Parameter(description = "Lecture UUID", required = true)
             @Valid @PathVariable("id") @UUID String id ) {
         java.util.UUID lectureId = java.util.UUID.fromString(id);
