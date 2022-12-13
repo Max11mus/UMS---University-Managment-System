@@ -2,6 +2,7 @@ package com.foxminded.ums.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import java.security.Principal;
 public class HomeRestController {
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TEACHER', 'ROLE_STUDENT')")
     public ResponseEntity<String> homePageGet(Principal principal) {
         if (principal == null) {
             return ResponseEntity.ok().body("University Management System (UMS)");
@@ -26,6 +28,7 @@ public class HomeRestController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TEACHER', 'ROLE_STUDENT')")
     public ResponseEntity<String> homePagePost(Principal principal) {
         if (principal == null) {
             return ResponseEntity.ok().body("University Management System (UMS)");

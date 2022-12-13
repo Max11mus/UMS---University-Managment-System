@@ -1,9 +1,5 @@
 package com.foxminded.ums.security;
 
-import com.foxminded.ums.repository.StudentRepository;
-import com.foxminded.ums.repository.TeacherRepository;
-import javafx.scene.control.PasswordField;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -14,11 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 @Configuration
 @EnableWebSecurity(debug = true)
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
     @Override
@@ -41,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
     @Override
     @Bean
     public UserDetailsService userDetailsService()  {
-        return new UserRepositoryUserDetailsService();
+        return new UserDetailsServiceImpl();
     }
 
     @Bean

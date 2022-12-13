@@ -1,10 +1,6 @@
 package com.foxminded.ums.entities;
 
-import com.foxminded.ums.security.Role;
-
 import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -44,18 +40,6 @@ public abstract class Person {
 
     @Column(name = "hashed_password", updatable = false)
     private String hashedPassword;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "user_role")
-    private Role role;
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
     public UUID getId() {
         return id;

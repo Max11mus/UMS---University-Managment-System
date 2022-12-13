@@ -1,9 +1,9 @@
 package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.TimeTableUnitDto;
+import com.foxminded.ums.entities.User;
 import com.foxminded.ums.exeptions.ErrorResponce;
-import com.foxminded.ums.security.SecurityHelper;
-import com.foxminded.ums.security.User;
+import com.foxminded.ums.service.StudentService;
 import com.foxminded.ums.service.TimeTableService;
 import com.foxminded.ums.validation.UUID;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +43,7 @@ public class TimeTableRestController {
     private TimeTableService timeTableService;
 
     @Autowired
-    private SecurityHelper securityHelper;
+    private StudentService studentService;
 
     @Operation(summary = "Show List of TimetableUnits For Student with ID",
             description = "",
@@ -57,6 +58,7 @@ public class TimeTableRestController {
     })
     @RequestMapping(value = "/student/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_STUDENT')")
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForStudent(
             @Parameter(description = "Student UUID. Cannot null or empty", required = true)
             @Valid @PathVariable("id") @UUID String id,
@@ -65,9 +67,14 @@ public class TimeTableRestController {
             @Parameter(description = "Ending Day. Cannot null or empty. Format yyyy-mm-dd", required = true)
             @RequestParam(value = "endDay") String endDay,
             Authentication authentication) {
-        if (securityHelper.isAdmin(authentication)
-                || (securityHelper.isStudent(authentication)
-                && ((User) authentication.getPrincipal()).getId().toString().equals(id))) {
+
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_STUDENT"))) {
+            java.util.UUID userUuid = ((User) authentication.getPrincipal()).getId();
+            if (!userUuid.toString().equals(id)) {
+            throw new AccessDeniedException("Endpoint allowed for Student with UUID: " + id);
+            }
+        }
+
             TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate startDayDate = LocalDate.parse(startDay, formatter);
@@ -77,10 +84,10 @@ public class TimeTableRestController {
                     .findByPeriodForStudent(java.util.UUID.fromString(id),
                             startDayDate, endDayDate);
 
-            return ResponseEntity.ok().body(timeTableUnitDto);
-        }
 
-        throw new AccessDeniedException("Endpoint allowed only for Admins and for Student with UUID: " + id);
+
+            return ResponseEntity.ok().body(timeTableUnitDto);
+
     }
 
     @Operation(summary = "Show List of TimetableUnits For Teacher with ID",
@@ -96,15 +103,14 @@ public class TimeTableRestController {
     })
     @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_TEACHER')")
     public ResponseEntity<List<TimeTableUnitDto>> getTimeTableForTeacher(
             @Parameter(description = "Teacher UUID. Cannot null or empty", required = true)
             @Valid @PathVariable("id") @UUID String id,
             @Parameter(description = "Starting Day. Cannot null or empty. Format yyyy-mm-dd", required = true)
             @RequestParam(value = "startDay") String startDay,
             @Parameter(description = "Ending Day. Cannot null or empty. Format yyyy-mm-dd", required = true)
-            @RequestParam(value = "endDay") String endDay,
-            Authentication authentication) {
-        if (securityHelper.isAdmin(authentication) || securityHelper.isTeacher(authentication)) {
+            @RequestParam(value = "endDay") String endDay) {
             TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate startDayDate = LocalDate.parse(startDay, formatter);
@@ -116,9 +122,6 @@ public class TimeTableRestController {
                     startDayDate, endDayDate);
 
             return ResponseEntity.ok().body(timeTableUnitDto);
-        }
-
-        throw new AccessDeniedException("Endpoint allowed only for Admins and Teachers");
     }
 
 

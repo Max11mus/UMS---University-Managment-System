@@ -1,19 +1,37 @@
-package com.foxminded.ums.security;
+package com.foxminded.ums.entities;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 
+@Entity
+@Table(name = "user_ums", schema = "ums")
 public class User implements UserDetails {
+    @Id
+    @GeneratedValue
+    @Column(name = "user_id")
     private UUID id;
-    private String hashedPassword;
-    private String login;
-    private Role role;
 
+    @Column(name = "login")
+    private String login;
+
+    @Column(name = "hashed_password")
+    private String hashedPassword;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     public UUID getId() {
         return id;
@@ -25,7 +43,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList((new SimpleGrantedAuthority(this.getRole().toString())));
+        return Arrays.asList((new SimpleGrantedAuthority(this.role.getRoleName())));
     }
 
     @Override
