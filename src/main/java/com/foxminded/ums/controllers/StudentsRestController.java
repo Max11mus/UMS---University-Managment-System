@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,12 +53,12 @@ public class StudentsRestController {
     })
     @GetMapping(produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_TEACHER')")
     public ResponseEntity<List<StudentDto>> findStudents(
             @Parameter(description = "page > 0 (default = 0), size > 1 (default = 5); masked by default values")
             @PageableDefault(page = 0, size = 5) Pageable pageable) {
         List<StudentDto> studentDtos = studentService.findStudentsPageable(pageable);
-
-        return ResponseEntity.ok().body(studentDtos);
+                    return ResponseEntity.ok().body(studentDtos);
     }
 
     @Operation(summary = "Add new Student",
@@ -73,6 +74,7 @@ public class StudentsRestController {
     })
     @PostMapping(consumes = { "application/json"}, produces = { "application/json"})
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<StudentDto> addStudent(
             @Parameter(description = "Student to add. Cannot null or empty",
             required = true, schema = @Schema(implementation = StudentDto.class))
@@ -96,14 +98,13 @@ public class StudentsRestController {
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<StudentDto> findStudent(
             @Parameter(description = "Student UUID", required = true)
             @Valid @PathVariable("id") @UUID String id) {
-        java.util.UUID studentId = java.util.UUID.fromString(id);
-
-        StudentDto studentDto = studentService.findStudent(studentId);
-
-        return ResponseEntity.ok().body(studentDto);
+            java.util.UUID studentId = java.util.UUID.fromString(id);
+            StudentDto studentDto = studentService.findStudent(studentId);
+            return ResponseEntity.ok().body(studentDto);
     }
 
     @Operation(summary = "Update existed Student",
@@ -124,16 +125,17 @@ public class StudentsRestController {
             consumes = { "application/json"},
             produces = { "application/json"} )
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<StudentDto> updateStudent(
             @Parameter(description = "Student to update. Cannot null or empty", required = true)
             @Valid @RequestBody StudentDto studentDto,
             @Parameter(description = "Student UUID", required = true)
             @Valid @PathVariable("id") @UUID String id) {
-        java.util.UUID studentId = java.util.UUID.fromString(id);
-        studentDto.setId(studentId);
-        StudentDto updatedStudent = studentService.updateStudent(studentDto);
+            java.util.UUID studentId = java.util.UUID.fromString(id);
+            studentDto.setId(studentId);
+            StudentDto updatedStudent = studentService.updateStudent(studentDto);
 
-        return ResponseEntity.ok().body(updatedStudent);
+            return ResponseEntity.ok().body(updatedStudent);
     }
 
     @Operation(summary = "Delete existed Student",
@@ -151,12 +153,13 @@ public class StudentsRestController {
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<StudentDto> deleteStudent(
             @Parameter(description = "Student to delete. Cannot null or empty", required = true)
             @Valid @PathVariable("id") @UUID String id) {
-        java.util.UUID studentId = java.util.UUID.fromString(id);
-        studentService.deleteStudent(studentId);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            java.util.UUID studentId = java.util.UUID.fromString(id);
+            studentService.deleteStudent(studentId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 }

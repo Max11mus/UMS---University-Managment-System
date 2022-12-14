@@ -1,6 +1,5 @@
 package com.foxminded.ums.controllers;
 
-import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.exeptions.ErrorResponce;
 import com.foxminded.ums.service.TeacherService;
@@ -18,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,12 +53,13 @@ public class TeachersRestController {
     })
     @GetMapping(produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<TeacherDto>> findTeachers(
             @Parameter(description = "page > 0 (default = 0), size > 1 (default = 5); masked by default values")
             @PageableDefault(page = 0, size = 5) Pageable pageable) {
-        List<TeacherDto> teacherDtos = teacherService.findTeachersPageable(pageable);
+            List<TeacherDto> teacherDtos = teacherService.findTeachersPageable(pageable);
 
-        return ResponseEntity.ok().body(teacherDtos);
+            return ResponseEntity.ok().body(teacherDtos);
     }
 
     @Operation(summary = "Add new Teacher",
@@ -74,13 +75,14 @@ public class TeachersRestController {
     })
     @PostMapping(consumes = { "application/json"}, produces = { "application/json"})
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<TeacherDto> addTeacher(
             @Parameter(description = "Student to add. Cannot null or empty",
                     required = true, schema = @Schema(implementation = TeacherDto.class))
             @Valid @RequestBody TeacherDto teacherDto) {
-        TeacherDto addedTeacher = teacherService.addTeacher(teacherDto);
+            TeacherDto addedTeacher = teacherService.addTeacher(teacherDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedTeacher);
+            return ResponseEntity.status(HttpStatus.CREATED).body(addedTeacher);
     }
 
     @Operation(summary = "Find Teacher by ID",
@@ -97,14 +99,14 @@ public class TeachersRestController {
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<TeacherDto> findTeacher(
             @Parameter(description = "Teacher UUID", required = true)
             @Valid @PathVariable("id") @UUID String id) {
-        java.util.UUID teacherId = java.util.UUID.fromString(id);
+            java.util.UUID teacherId = java.util.UUID.fromString(id);
+            TeacherDto teacherDto = teacherService.findTeacher(teacherId);
 
-        TeacherDto teacherDto = teacherService.findTeacher(teacherId);
-
-        return ResponseEntity.ok().body(teacherDto);
+            return ResponseEntity.ok().body(teacherDto);
     }
 
     @Operation(summary = "Update existed Teacher",
@@ -125,17 +127,18 @@ public class TeachersRestController {
             consumes = { "application/json"},
             produces = { "application/json"} )
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<TeacherDto> updateTeacher(
             @Parameter(description = "Teacher to update. Cannot null or empty", required = true)
             @Valid @RequestBody TeacherDto teacherDto,
             @Parameter(description = "Teacher UUID", required = true)
             @Valid @PathVariable("id") @UUID String id) {
-        java.util.UUID teacherId = java.util.UUID.fromString(id);
-        teacherDto.setId(teacherId);
+            java.util.UUID teacherId = java.util.UUID.fromString(id);
+            teacherDto.setId(teacherId);
 
-        TeacherDto updatedTeacher = teacherService.updateTeacher(teacherDto);
+            TeacherDto updatedTeacher = teacherService.updateTeacher(teacherDto);
 
-        return ResponseEntity.ok().body(updatedTeacher);
+            return ResponseEntity.ok().body(updatedTeacher);
     }
 
     @Operation(summary = "Delete existed Student",
@@ -153,13 +156,14 @@ public class TeachersRestController {
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<TeacherDto> deleteTeacher(
             @Parameter(description = "Teacher to delete. Cannot null or empty", required = true)
             @Valid @PathVariable("id") @UUID String id) {
-        java.util.UUID teacherId = java.util.UUID.fromString(id);
-        teacherService.deleteTeacher(teacherId);
+            java.util.UUID teacherId = java.util.UUID.fromString(id);
+            teacherService.deleteTeacher(teacherId);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
 }

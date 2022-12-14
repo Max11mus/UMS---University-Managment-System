@@ -1,7 +1,6 @@
 package com.foxminded.ums.controllers;
 
 import com.foxminded.ums.dto.LectureDto;
-import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.exeptions.ErrorResponce;
 import com.foxminded.ums.service.LectureService;
 import com.foxminded.ums.validation.UUID;
@@ -15,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @Tag(name = "lectures", description = "lecture API")
@@ -47,7 +48,9 @@ public class LectureRestController {
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TEACHER', 'ROLE_STUDENT')")
     public ResponseEntity<LectureDto> findLecture(
+            Principal principal,
             @Parameter(description = "Lecture UUID", required = true)
             @Valid @PathVariable("id") @UUID String id ) {
         java.util.UUID lectureId = java.util.UUID.fromString(id);

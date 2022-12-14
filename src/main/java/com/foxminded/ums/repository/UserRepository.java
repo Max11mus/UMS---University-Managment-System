@@ -1,6 +1,6 @@
 package com.foxminded.ums.repository;
 
-import com.foxminded.ums.entities.Student;
+import com.foxminded.ums.entities.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface StudentRepository extends CrudRepository<Student, UUID>,
-        PagingAndSortingRepository<Student, UUID> {
-    Student findByLogin(String login);
+public interface UserRepository extends CrudRepository<User, UUID>,
+        PagingAndSortingRepository<User, UUID> {
+    User findByLogin(String login);
 }

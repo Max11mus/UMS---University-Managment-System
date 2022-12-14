@@ -12,7 +12,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "teacher", schema = "ums")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Teacher extends Person{
+public class Teacher extends Person {
 
     @Column(name = "academic_degree")
     private String academicDegree;
