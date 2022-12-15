@@ -5,6 +5,7 @@ import com.foxminded.ums.exeptions.LectureNotFoundException;
 import com.foxminded.ums.exeptions.ServerErrorException;
 import com.foxminded.ums.exeptions.StudentNotFoundException;
 import com.foxminded.ums.exeptions.TeacherNotFoundException;
+import com.foxminded.ums.money.transactions.PersonNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -50,7 +51,8 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {LectureNotFoundException.class,
             StudentNotFoundException.class,
-            TeacherNotFoundException.class})
+            TeacherNotFoundException.class,
+            PersonNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponce> handleNotFound(RuntimeException e) {
         ErrorResponce errorResponce = new ErrorResponce(HttpStatus.NOT_FOUND, e.getMessage(),

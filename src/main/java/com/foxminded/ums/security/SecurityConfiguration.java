@@ -24,13 +24,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
                         "/lectures/**",
                         "/students/**",
                         "/teachers/**",
-                        "/timetable/**").authenticated()
+                        "/timetable/**",
+                        "/moneytransactions/**").authenticated()
                 .and()
                 .httpBasic()
                 .and()
                 .formLogin().successForwardUrl("/home")
                 .and()
                 .logout().logoutSuccessUrl("/home");
+        http.csrf().disable();
     }
 
     @Override
