@@ -24,8 +24,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
                         "/lectures/**",
                         "/students/**",
                         "/teachers/**",
-                        "/timetable/**",
-                        "/moneytransactions/**").authenticated()
+                        "/timetable/**").authenticated()
                 .and()
                 .httpBasic()
                 .and()

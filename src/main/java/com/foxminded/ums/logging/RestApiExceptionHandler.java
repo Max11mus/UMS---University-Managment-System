@@ -2,10 +2,10 @@ package com.foxminded.ums.logging;
 
 import com.foxminded.ums.exeptions.ErrorResponce;
 import com.foxminded.ums.exeptions.LectureNotFoundException;
+import com.foxminded.ums.exeptions.PersonNotFoundException;
 import com.foxminded.ums.exeptions.ServerErrorException;
 import com.foxminded.ums.exeptions.StudentNotFoundException;
 import com.foxminded.ums.exeptions.TeacherNotFoundException;
-import com.foxminded.ums.money.transactions.PersonNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;

@@ -1,6 +1,10 @@
 package com.foxminded.ums.controllers;
 
+import com.foxminded.ums.dto.MoneyTransactionDto;
+import com.foxminded.ums.dto.MoneyTransactionDtoMapper;
+import com.foxminded.ums.dto.MoneyTransactionWithDetailsDto;
 import com.foxminded.ums.dto.StudentDto;
+import com.foxminded.ums.entities.User;
 import com.foxminded.ums.exeptions.ErrorResponce;
 import com.foxminded.ums.service.StudentService;
 import com.foxminded.ums.validation.UUID;
@@ -17,7 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -39,6 +46,12 @@ public class StudentsRestController {
 
     @Autowired
     private StudentService studentService;
+    
+    @Autowired
+    RestMoneyTransactionClient restMoneyTransactionClient;
+
+    @Autowired
+    MoneyTransactionDtoMapper mapper;
 
     @Operation(summary = "Show List of Students page by page",
             description = "Show One Page of List of Students",
@@ -58,7 +71,7 @@ public class StudentsRestController {
             @Parameter(description = "page > 0 (default = 0), size > 1 (default = 5); masked by default values")
             @PageableDefault(page = 0, size = 5) Pageable pageable) {
         List<StudentDto> studentDtos = studentService.findStudentsPageable(pageable);
-                    return ResponseEntity.ok().body(studentDtos);
+        return ResponseEntity.ok().body(studentDtos);
     }
 
     @Operation(summary = "Add new Student",
@@ -72,12 +85,12 @@ public class StudentsRestController {
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
-    @PostMapping(consumes = { "application/json"}, produces = { "application/json"})
+    @PostMapping(consumes = {"application/json"}, produces = {"application/json"})
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<StudentDto> addStudent(
             @Parameter(description = "Student to add. Cannot null or empty",
-            required = true, schema = @Schema(implementation = StudentDto.class))
+                    required = true, schema = @Schema(implementation = StudentDto.class))
             @Valid @RequestBody StudentDto studentDto) {
         StudentDto addedStudent = studentService.addStudent(studentDto);
 
@@ -85,7 +98,7 @@ public class StudentsRestController {
     }
 
     @Operation(summary = "Find Student by ID",
-            description = "Returns one Student with ID", tags = { "students" })
+            description = "Returns one Student with ID", tags = {"students"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok", content =
             @Content(schema = @Schema(implementation = StudentDto.class))),
@@ -102,9 +115,9 @@ public class StudentsRestController {
     public ResponseEntity<StudentDto> findStudent(
             @Parameter(description = "Student UUID", required = true)
             @Valid @PathVariable("id") @UUID String id) {
-            java.util.UUID studentId = java.util.UUID.fromString(id);
-            StudentDto studentDto = studentService.findStudent(studentId);
-            return ResponseEntity.ok().body(studentDto);
+        java.util.UUID studentId = java.util.UUID.fromString(id);
+        StudentDto studentDto = studentService.findStudent(studentId);
+        return ResponseEntity.ok().body(studentDto);
     }
 
     @Operation(summary = "Update existed Student",
@@ -122,8 +135,8 @@ public class StudentsRestController {
     })
     @RequestMapping(value = "/{id}",
             method = RequestMethod.PUT,
-            consumes = { "application/json"},
-            produces = { "application/json"} )
+            consumes = {"application/json"},
+            produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<StudentDto> updateStudent(
@@ -131,11 +144,11 @@ public class StudentsRestController {
             @Valid @RequestBody StudentDto studentDto,
             @Parameter(description = "Student UUID", required = true)
             @Valid @PathVariable("id") @UUID String id) {
-            java.util.UUID studentId = java.util.UUID.fromString(id);
-            studentDto.setId(studentId);
-            StudentDto updatedStudent = studentService.updateStudent(studentDto);
+        java.util.UUID studentId = java.util.UUID.fromString(id);
+        studentDto.setId(studentId);
+        StudentDto updatedStudent = studentService.updateStudent(studentDto);
 
-            return ResponseEntity.ok().body(updatedStudent);
+        return ResponseEntity.ok().body(updatedStudent);
     }
 
     @Operation(summary = "Delete existed Student",
@@ -157,9 +170,78 @@ public class StudentsRestController {
     public ResponseEntity<StudentDto> deleteStudent(
             @Parameter(description = "Student to delete. Cannot null or empty", required = true)
             @Valid @PathVariable("id") @UUID String id) {
-            java.util.UUID studentId = java.util.UUID.fromString(id);
-            studentService.deleteStudent(studentId);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        java.util.UUID studentId = java.util.UUID.fromString(id);
+        studentService.deleteStudent(studentId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    @Operation(summary = "Find Student MoneyTransactions Show Amounts In USD",
+            description = "",
+            tags = {"students"})
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(array = @ArraySchema(schema = @Schema(implementation = MoneyTransactionWithDetailsDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
+    @RequestMapping(value = "/{id}/money-transactions-USD", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<List<MoneyTransactionWithDetailsDto>> findStudentMoneyTransactionsUsd(
+            @Parameter(description = "Owner UUID. Cannot null or empty", required = true)
+            @Valid @PathVariable("id") @UUID String id, Authentication authentication) {
+        if (authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            java.util.UUID userUuid = ((User) authentication.getPrincipal()).getId();
+            if (!userUuid.toString().equals(id)) {
+                throw new AccessDeniedException("Only owner with UUID: " + id + " may get transactions");
+            }
+        }
+
+        List<MoneyTransactionDto> moneyTransactionDto =
+                    restMoneyTransactionClient.getMoneyTransactionsByOwner(id, "USD");
+        List<MoneyTransactionWithDetailsDto> moneyTransactionWithDetailsDtos =
+                    moneyTransactionDto.stream().map((e) -> mapper.convertMoneyTransactionDto(e))
+                            .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(moneyTransactionWithDetailsDtos);
+    }
+
+    @Operation(summary = "Find Student MoneyTransactions Show Amounts In UAH",
+            description = "",
+            tags = {"students"})
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(array = @ArraySchema(schema = @Schema(implementation = MoneyTransactionWithDetailsDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
+    @RequestMapping(value = "/{id}/money-transactions-UAH", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<List<MoneyTransactionWithDetailsDto>> findStudentMoneyTransactionsUah(
+            @Parameter(description = "Owner UUID. Cannot null or empty", required = true)
+            @Valid @PathVariable("id") @UUID String id, Authentication authentication) {
+        if (authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            java.util.UUID userUuid = ((User) authentication.getPrincipal()).getId();
+            if (!userUuid.toString().equals(id)) {
+                throw new AccessDeniedException("Only owner with UUID: " + id + " may get transactions");
+            }
+        }
+
+        List<MoneyTransactionDto> moneyTransactionDto =
+                restMoneyTransactionClient.getMoneyTransactionsByOwner(id, "UAH");
+        List<MoneyTransactionWithDetailsDto> moneyTransactionWithDetailsDtos =
+                moneyTransactionDto.stream().map((e) -> mapper.convertMoneyTransactionDto(e))
+                        .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(moneyTransactionWithDetailsDtos);
     }
 
 }

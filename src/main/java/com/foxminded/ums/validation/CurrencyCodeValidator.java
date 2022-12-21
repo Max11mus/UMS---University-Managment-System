@@ -1,4 +1,4 @@
-package com.foxminded.ums.money.transactions;
+package com.foxminded.ums.validation;
 
 import org.springframework.stereotype.Component;
 

@@ -23,8 +23,7 @@ import java.util.UUID;
 public class TransactionsAspectLogger {
     private final static Logger LOGGER = LoggerFactory.getLogger(TransactionsAspectLogger.class);
 
-    @Pointcut("within(com.foxminded.ums.service.*) " +
-            "|| within(com.foxminded.ums.money.transactions.MoneyTransactionService)")
+    @Pointcut("within(com.foxminded.ums.service.*)")
     public void anyTransaction(){
     }
 

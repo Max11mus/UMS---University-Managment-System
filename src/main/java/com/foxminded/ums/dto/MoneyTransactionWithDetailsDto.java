@@ -1,5 +1,5 @@
 
-package com.foxminded.ums.money.transactions;
+package com.foxminded.ums.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxminded.ums.validation.UUID;
@@ -11,7 +11,6 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -20,16 +19,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class MoneyTransactionDto {
+public class MoneyTransactionWithDetailsDto {
     private java.util.UUID id;
     private LocalDateTime dateTime;
 
     @UUID
     @NotNull
     @NotBlank
-    private String senderId;
-    private String senderName;
-    private String senderSurName;
+    private String ownerId;
+    private String ownerName;
+    private String ownerSurName;
 
     @UUID
     @NotNull
@@ -38,8 +37,7 @@ public class MoneyTransactionDto {
     private String receiverName;
     private String receiverSurName;
 
-    @ValidCurrencyCode
     private String currencyCode;
 
-    private BigDecimal amount;
+    private String amount;
 }
