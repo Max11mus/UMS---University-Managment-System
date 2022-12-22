@@ -6,7 +6,7 @@ import com.foxminded.ums.dto.MoneyTransactionWithDetailsDto;
 import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.entities.User;
 import com.foxminded.ums.exeptions.ErrorResponce;
-import com.foxminded.ums.service.RestMoneyTransactionService;
+import com.foxminded.ums.service.MoneyTransactionService;
 import com.foxminded.ums.service.TeacherService;
 import com.foxminded.ums.validation.UUID;
 import com.foxminded.ums.validation.ValidCurrencyCode;
@@ -51,7 +51,7 @@ public class TeachersRestController {
     private TeacherService teacherService;
 
     @Autowired
-    private RestMoneyTransactionService restMoneyTransactionService;
+    private MoneyTransactionService moneyTransactionService;
 
     @Autowired
     private MoneyTransactionDtoMapper mapper;
@@ -210,7 +210,7 @@ public class TeachersRestController {
         }
 
         List<MoneyTransactionDto> moneyTransactionDto =
-                restMoneyTransactionService.getMoneyTransactionsByOwner(ownerId, currency);
+                moneyTransactionService.getMoneyTransactionsByOwner(ownerId, currency);
         List<MoneyTransactionWithDetailsDto> moneyTransactionWithDetailsDtos =
                 moneyTransactionDto.stream().map((e) -> mapper.convertMoneyTransactionDto(e))
                         .collect(Collectors.toList());
