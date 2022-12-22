@@ -53,7 +53,7 @@ public class TimeTableRestController {
             @Content(array = @ArraySchema(schema = @Schema(implementation = TimeTableUnitDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @RequestMapping(value = "/student/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})
@@ -98,7 +98,7 @@ public class TimeTableRestController {
             @Content(array = @ArraySchema(schema = @Schema(implementation = TimeTableUnitDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @RequestMapping(value = "/teacher/{id}", method = RequestMethod.GET, params = {"startDay", "endDay"})

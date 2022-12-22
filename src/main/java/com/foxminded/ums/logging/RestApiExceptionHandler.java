@@ -3,7 +3,7 @@ package com.foxminded.ums.logging;
 import com.foxminded.ums.exeptions.ErrorResponce;
 import com.foxminded.ums.exeptions.LectureNotFoundException;
 import com.foxminded.ums.exeptions.PersonNotFoundException;
-import com.foxminded.ums.exeptions.ServerErrorException;
+import com.foxminded.ums.exeptions.ServerUnavailableException;
 import com.foxminded.ums.exeptions.StudentNotFoundException;
 import com.foxminded.ums.exeptions.TeacherNotFoundException;
 import org.slf4j.Logger;
@@ -68,15 +68,15 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<ErrorResponce>(errorResponce, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = {ServerErrorException.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = {ServerUnavailableException.class})
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     public ResponseEntity<ErrorResponce> handleServerError(RuntimeException e) {
-        ErrorResponce errorResponce = new ErrorResponce(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),
-                "The server has encountered a situation it does not know how to handle.");
+        ErrorResponce errorResponce = new ErrorResponce(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage(),
+                "Server is not ready to handle the request.");
 
         LOGGER.error(e.getMessage(), e.getCause());
 
-        return new ResponseEntity<ErrorResponce>(errorResponce, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<ErrorResponce>(errorResponce, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
 

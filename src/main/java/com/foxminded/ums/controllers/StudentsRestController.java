@@ -6,8 +6,10 @@ import com.foxminded.ums.dto.MoneyTransactionWithDetailsDto;
 import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.entities.User;
 import com.foxminded.ums.exeptions.ErrorResponce;
+import com.foxminded.ums.service.RestMoneyTransactionService;
 import com.foxminded.ums.service.StudentService;
 import com.foxminded.ums.validation.UUID;
+import com.foxminded.ums.validation.ValidCurrencyCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +51,7 @@ public class StudentsRestController {
     private StudentService studentService;
     
     @Autowired
-    RestMoneyTransactionClient restMoneyTransactionClient;
+    RestMoneyTransactionService restMoneyTransactionService;
 
     @Autowired
     MoneyTransactionDtoMapper mapper;
@@ -61,7 +64,7 @@ public class StudentsRestController {
             @Content(array = @ArraySchema(schema = @Schema(implementation = StudentDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @GetMapping(produces = {"application/json"})
@@ -82,7 +85,7 @@ public class StudentsRestController {
             @Content(schema = @Schema(implementation = StudentDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @PostMapping(consumes = {"application/json"}, produces = {"application/json"})
@@ -106,7 +109,7 @@ public class StudentsRestController {
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json"})
@@ -130,7 +133,7 @@ public class StudentsRestController {
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @RequestMapping(value = "/{id}",
@@ -161,7 +164,7 @@ public class StudentsRestController {
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -175,71 +178,38 @@ public class StudentsRestController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
-    @Operation(summary = "Find Student MoneyTransactions Show Amounts In USD",
+    @Operation(summary = "Find Student MoneyTransactions Show Amounts In Currency",
             description = "",
             tags = {"students"})
-
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok", content =
             @Content(array = @ArraySchema(schema = @Schema(implementation = MoneyTransactionWithDetailsDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
-    @RequestMapping(value = "/{id}/money-transactions-USD", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/money-transactions", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_STUDENT')")
-    public ResponseEntity<List<MoneyTransactionWithDetailsDto>> findStudentMoneyTransactionsUsd(
+    public ResponseEntity<List<MoneyTransactionWithDetailsDto>> findStudentMoneyTransactions(
             @Parameter(description = "Owner UUID. Cannot null or empty", required = true)
-            @Valid @PathVariable("id") @UUID String id, Authentication authentication) {
+            @Valid @PathVariable("id") @UUID String ownerId,
+            @Parameter(description = "Currency Code. Cannot null or empty", required = true)
+            @Valid@RequestParam("currency") @ValidCurrencyCode String currency,
+            Authentication authentication) {
         if (authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             java.util.UUID userUuid = ((User) authentication.getPrincipal()).getId();
-            if (!userUuid.toString().equals(id)) {
-                throw new AccessDeniedException("Only owner with UUID: " + id + " may get transactions");
+            if (!userUuid.toString().equals(ownerId)) {
+                throw new AccessDeniedException("Only owner with UUID: " + ownerId + " may get transactions");
             }
         }
 
         List<MoneyTransactionDto> moneyTransactionDto =
-                    restMoneyTransactionClient.getMoneyTransactionsByOwner(id, "USD");
+                    restMoneyTransactionService.getMoneyTransactionsByOwner(ownerId, currency);
         List<MoneyTransactionWithDetailsDto> moneyTransactionWithDetailsDtos =
                     moneyTransactionDto.stream().map((e) -> mapper.convertMoneyTransactionDto(e))
                             .collect(Collectors.toList());
-
-        return ResponseEntity.ok().body(moneyTransactionWithDetailsDtos);
-    }
-
-    @Operation(summary = "Find Student MoneyTransactions Show Amounts In UAH",
-            description = "",
-            tags = {"students"})
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ok", content =
-            @Content(array = @ArraySchema(schema = @Schema(implementation = MoneyTransactionWithDetailsDto.class)))),
-            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
-            @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
-            @Content(schema = @Schema(implementation = ErrorResponce.class)))
-    })
-    @RequestMapping(value = "/{id}/money-transactions-UAH", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_STUDENT')")
-    public ResponseEntity<List<MoneyTransactionWithDetailsDto>> findStudentMoneyTransactionsUah(
-            @Parameter(description = "Owner UUID. Cannot null or empty", required = true)
-            @Valid @PathVariable("id") @UUID String id, Authentication authentication) {
-        if (authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-            java.util.UUID userUuid = ((User) authentication.getPrincipal()).getId();
-            if (!userUuid.toString().equals(id)) {
-                throw new AccessDeniedException("Only owner with UUID: " + id + " may get transactions");
-            }
-        }
-
-        List<MoneyTransactionDto> moneyTransactionDto =
-                restMoneyTransactionClient.getMoneyTransactionsByOwner(id, "UAH");
-        List<MoneyTransactionWithDetailsDto> moneyTransactionWithDetailsDtos =
-                moneyTransactionDto.stream().map((e) -> mapper.convertMoneyTransactionDto(e))
-                        .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(moneyTransactionWithDetailsDtos);
     }

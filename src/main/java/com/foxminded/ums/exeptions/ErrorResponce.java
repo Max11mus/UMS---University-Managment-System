@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 
 public class ErrorResponce {
-    @Schema(description = "HttpStatus: BAD_REQUEST, INTERNAL_SERVER_ERROR, etc.",
+    @Schema(description = "HttpStatus: BAD_REQUEST, SERVICE_UNAVAILABLE, etc.",
             example = "BAD_REQUEST")
     private HttpStatus httpStatusCode;
 
