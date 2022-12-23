@@ -3,7 +3,7 @@ package com.foxminded.ums.logging;
 import com.foxminded.ums.dto.StudentDto;
 import com.foxminded.ums.dto.TeacherDto;
 import com.foxminded.ums.exeptions.LectureNotFoundException;
-import com.foxminded.ums.exeptions.ServerErrorException;
+import com.foxminded.ums.exeptions.ServerUnavailableException;
 import com.foxminded.ums.exeptions.StudentNotFoundException;
 import com.foxminded.ums.exeptions.TeacherNotFoundException;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -87,7 +87,7 @@ public class TransactionsAspectLogger {
                 }
 
             } else {
-                throw new ServerErrorException(e.getMessage(), e);
+                throw new ServerUnavailableException(e.getMessage(), e);
             }
         }
         return result;

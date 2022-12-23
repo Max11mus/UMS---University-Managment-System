@@ -31,6 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
                 .formLogin().successForwardUrl("/home")
                 .and()
                 .logout().logoutSuccessUrl("/home");
+        http.csrf().disable();
     }
 
     @Override

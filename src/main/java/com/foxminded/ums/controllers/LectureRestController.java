@@ -43,7 +43,7 @@ public class LectureRestController {
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json"})

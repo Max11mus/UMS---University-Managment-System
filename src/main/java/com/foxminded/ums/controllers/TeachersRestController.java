@@ -1,9 +1,15 @@
 package com.foxminded.ums.controllers;
 
+import com.foxminded.ums.dto.MoneyTransactionDto;
+import com.foxminded.ums.dto.MoneyTransactionDtoMapper;
+import com.foxminded.ums.dto.MoneyTransactionWithDetailsDto;
 import com.foxminded.ums.dto.TeacherDto;
+import com.foxminded.ums.entities.User;
 import com.foxminded.ums.exeptions.ErrorResponce;
+import com.foxminded.ums.service.MoneyTransactionService;
 import com.foxminded.ums.service.TeacherService;
 import com.foxminded.ums.validation.UUID;
+import com.foxminded.ums.validation.ValidCurrencyCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -17,7 +23,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,11 +33,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -40,6 +50,12 @@ public class TeachersRestController {
     @Autowired
     private TeacherService teacherService;
 
+    @Autowired
+    private MoneyTransactionService moneyTransactionService;
+
+    @Autowired
+    private MoneyTransactionDtoMapper mapper;
+
     @Operation(summary = "Show List of Teachers page by page",
             description = "Show One Page of List of Teachers",
             tags = {"teachers"})
@@ -48,7 +64,7 @@ public class TeachersRestController {
             @Content(array = @ArraySchema(schema = @Schema(implementation = TeacherDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @GetMapping(produces = {"application/json"})
@@ -70,7 +86,7 @@ public class TeachersRestController {
             @Content(schema = @Schema(implementation = TeacherDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @PostMapping(consumes = { "application/json"}, produces = { "application/json"})
@@ -94,7 +110,7 @@ public class TeachersRestController {
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json"})
@@ -119,7 +135,7 @@ public class TeachersRestController {
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @RequestMapping(value = "/{id}",
@@ -151,7 +167,7 @@ public class TeachersRestController {
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class))),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content =
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
             @Content(schema = @Schema(implementation = ErrorResponce.class)))
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -164,6 +180,42 @@ public class TeachersRestController {
             teacherService.deleteTeacher(teacherId);
 
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+    }
+
+    @Operation(summary = "Find Teacher MoneyTransactions Show Amounts In Currency",
+            description = "",
+            tags = {"Teachers"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+            @Content(array = @ArraySchema(schema = @Schema(implementation = MoneyTransactionWithDetailsDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class))),
+            @ApiResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE", content =
+            @Content(schema = @Schema(implementation = ErrorResponce.class)))
+    })
+    @RequestMapping(value = "/{id}/money-transactions", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_TEACHER')")
+    public ResponseEntity<List<MoneyTransactionWithDetailsDto>> findTeacherMoneyTransactions(
+            @Parameter(description = "Owner UUID. Cannot null or empty", required = true)
+            @Valid @PathVariable("id") @UUID String ownerId,
+            @Parameter(description = "Currency Code. Cannot null or empty", required = true)
+            @Valid@RequestParam("currency") @ValidCurrencyCode String currency,
+            Authentication authentication) {
+        if (authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            java.util.UUID userUuid = ((User) authentication.getPrincipal()).getId();
+            if (!userUuid.toString().equals(ownerId)) {
+                throw new AccessDeniedException("Only owner with UUID: " + ownerId + " may get transactions");
+            }
+        }
+
+        List<MoneyTransactionDto> moneyTransactionDto =
+                moneyTransactionService.getMoneyTransactionsByOwner(ownerId, currency);
+        List<MoneyTransactionWithDetailsDto> moneyTransactionWithDetailsDtos =
+                moneyTransactionDto.stream().map((e) -> mapper.convertMoneyTransactionDto(e))
+                        .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(moneyTransactionWithDetailsDtos);
     }
 
 }

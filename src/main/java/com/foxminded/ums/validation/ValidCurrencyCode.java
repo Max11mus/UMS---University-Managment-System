@@ -14,10 +14,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({FIELD, METHOD, PARAMETER, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = UUIDValidator.class)
+@Constraint(validatedBy = CurrencyCodeValidator.class)
 @Documented
-public @interface UUID {
-    String message() default "${validatedValue}  isn't correct UUID.";
+public @interface ValidCurrencyCode {
+    String message() default "${validatedValue}  isn't correct " +
+            " currency code. See https://www.iban.com/currency-codes";
 
     Class<?>[] groups() default {};
 
