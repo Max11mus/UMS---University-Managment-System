@@ -1,7 +1,7 @@
 # Docker File for MoneyTransactionRestService
 
 # Using Maven Alpine image with Java 8
-FROM maven:3-jdk-8-alpine AS mavenbuild
+FROM maven:3-eclipse-temurin-11-alpine AS mavenbuild
 
 # Copy sourse files
 WORKDIR /money-transaction-rest-service/app/src/
@@ -12,7 +12,7 @@ COPY pom.xml ../
 RUN mvn -f /money-transaction-rest-service/app/pom.xml clean package -DskipTests
 
 # Using Alpine image with Java 8
-FROM openjdk:8-jdk-alpine
+FROM openjdk:11-jre-slim-buster
 
 WORKDIR /money-transaction-rest-service/lib/
 
