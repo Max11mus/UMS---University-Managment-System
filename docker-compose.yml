@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+#  Postgres Database for UMS
+  postgresql-ums:
+    image: postgres:12-alpine
+    ports:
+      - ${POSTGRES_PORT_UMS}:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_UMS}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_UMS}
+      POSTGRES_DB: ${POSTGRES_DB_UMS}
+
+#   Postgres Database for MONEY-TRANSACTION-REST-SERVICE
+  postgresql-money-transaction-rest-service:
+    image: postgres:12-alpine
+    ports:
+      - ${POSTGRES_PORT_MONEY_TRANSACTION_REST_SERVICE}:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_MONEY_TRANSACTION_REST_SERVICE}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_MONEY_TRANSACTION_REST_SERVICE}
+      POSTGRES_DB: ${POSTGRES_DB_MONEY_TRANSACTION_REST_SERVICE}
+
+  ums-spring-boot:
+    build:
+      dockerfile: Dockerfile
+      context: ./ums/
+    env_file:
+      - .env
+    depends_on:
+      - postgresql-ums
+    ports:
+      - 8080:8080
+
+  money-transaction-rest-service-spring-boot:
+    build:
+      dockerfile: Dockerfile
+      context: ./money-transaction-rest-service/
+    env_file:
+      - .env
+    depends_on:
+    - postgresql-money-transaction-rest-service
+    ports:
+    - ${MONEY_TRANSACTION_PORT}:7000
+
+
